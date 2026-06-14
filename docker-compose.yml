@@ -1,6 +1,7 @@
 services:
   compiler:
     build: .
+    container_name: multi_compiler
     ports:
       - "6600:6600"
     environment:
@@ -26,6 +27,7 @@ services:
 
   mysql:
     image: mysql:8
+    container_name: multi_compiler
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_pass}
       MYSQL_DATABASE: sandbox
@@ -36,7 +38,16 @@ services:
     ports:
       - "3306:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-ucompiler", "-pcompiler_pass"]
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-ucompiler",
+          "-pcompiler_pass",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
