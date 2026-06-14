@@ -998,10 +998,28 @@ label {
   border-right: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 100;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 3px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .sidebar-list {
@@ -1994,7 +2012,11 @@ label {
 }
 
 /* --- Day mode refinements --- */
-.day #output {
+#html-preview { border: none; }
+
+.day #output,
+.day #html-preview,
+.day #sql-results {
   border: 1px solid #e3e7ee;
   border-top: none;
   border-bottom: none;
@@ -2133,4 +2155,99 @@ label {
 
 .file-name .truncate[contenteditable="true"] {
   caret-color: currentColor;
+}
+
+/* ── SQL Results Grid ───────────────────────────────────────────── */
+/* ── SQL Results ── */
+#sql-results {
+  height: 100%;
+  overflow-y: auto;
+  padding: 1rem;
+  background: var(--output-bg);
+  box-sizing: border-box;
+  font-family: "Menlo", "Monaco", "Consolas", monospace;
+}
+
+.sql-table-wrapper {
+  margin-bottom: 1.25rem;
+  overflow-x: auto;
+  border: 1px dashed var(--border-primary);
+  border-radius: 4px;
+}
+
+.sql-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.sql-table th {
+  padding: 0.55rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  border-bottom: 1px dashed var(--border-primary);
+  border-right: 1px dashed var(--border-primary);
+  white-space: nowrap;
+}
+
+.sql-table th:last-child { border-right: none; }
+
+.sql-table tbody tr {
+  border-bottom: 1px dashed var(--border-primary);
+  transition: opacity 0.1s;
+}
+
+.sql-table tbody tr:last-child { border-bottom: none; }
+
+.sql-table td {
+  padding: 0.45rem 1rem;
+  color: var(--text-primary);
+  border-right: 1px dashed var(--border-primary);
+  white-space: nowrap;
+}
+
+.sql-table td:last-child { border-right: none; }
+
+.sql-null {
+  color: var(--text-secondary) !important;
+  font-style: italic;
+}
+
+.sql-table-meta {
+  padding: 0.35rem 1rem;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  border-top: 1px dashed var(--border-primary);
+  text-align: right;
+}
+
+.sql-message {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin: 0.2rem 0;
+  padding: 0.25rem 0.5rem;
+}
+
+.sql-error {
+  font-size: 0.8rem;
+  color: #fc8181;
+  margin: 0.3rem 0;
+  padding: 0.4rem 0.75rem;
+  border-left: 2px solid #fc8181;
+}
+
+.day .sql-error { color: #c53030; border-left-color: #c53030; }
+
+@keyframes sql-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.sql-loading {
+  animation: sql-pulse 1.4s ease-in-out infinite;
+  color: var(--text-secondary) !important;
 }

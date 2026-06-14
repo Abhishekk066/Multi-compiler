@@ -19,6 +19,13 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
         ruby \
         php-cli \
         nodejs \
+        rustc \
+        mono-mcs \
+        perl \
+        lua5.4 \
+        r-base \
+        default-mysql-client \
+    && ln -s /usr/bin/lua5.4 /usr/local/bin/lua \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Kotlin compiler
@@ -36,6 +43,11 @@ COPY . .
 
 # Go build cache on tmpfs — faster repeated go run calls within a session
 ENV GOCACHE=/tmp/go-cache
+ENV NODE_ENV=production
 
 EXPOSE 6600
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD curl -f http://localhost:6600/ || exit 1
+
 CMD ["node", "index.js"]

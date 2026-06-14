@@ -65,7 +65,7 @@ export async function callAI(prompt) {
       }),
 
       new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("AI request timeout")), 60000),
+        setTimeout(() => reject(new Error("AI request timeout")), 120000),
       ),
     ]);
 

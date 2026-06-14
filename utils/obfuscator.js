@@ -31,5 +31,8 @@ export async function obfuscateScript() {
     });
 
     fs.writeFileSync(targetFile, obfuscationResult.getObfuscatedCode(), 'utf8');
-  } catch (error) {}
+    console.log('[obfuscator] script.min.js regenerated');
+  } catch (error) {
+    console.error('[obfuscator] Failed:', error.message);
+  }
 }

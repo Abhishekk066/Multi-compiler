@@ -30,6 +30,29 @@ const LANGUAGE_ALIASES = {
   sh: "bash",
   shell: "bash",
   bash: "bash",
+
+  rs: "rust",
+  rust: "rust",
+
+  cs: "csharp",
+  csharp: "csharp",
+  "c#": "csharp",
+  dotnet: "csharp",
+
+  pl: "perl",
+  perl: "perl",
+
+  lua: "lua",
+
+  r: "r",
+  rscript: "r",
+
+  html: "html",
+  htm: "html",
+
+  sql: "sql",
+  mysql: "sql",
+  sqlite: "sql",
 };
 
 const LANGUAGE_LABELS = {
@@ -44,6 +67,13 @@ const LANGUAGE_LABELS = {
   php: "PHP",
   kotlin: "Kotlin",
   bash: "Bash",
+  rust: "Rust",
+  csharp: "C#",
+  perl: "Perl",
+  lua: "Lua",
+  r: "R",
+  html: "HTML",
+  sql: "SQL",
 };
 
 const STYLE_HINTS = {
@@ -58,6 +88,13 @@ const STYLE_HINTS = {
   php: "Write PHP CLI code starting with <?php.",
   kotlin: "Write Kotlin code with fun main().",
   bash: "Write a Bash script.",
+  rust: "Use fn main(), proper ownership, and std::io for input.",
+  csharp: "Use 'using System;', class Program, and static void Main(string[] args).",
+  perl: "Write Perl code. Use strict and warnings where appropriate.",
+  lua: "Write Lua code. Use io.read() for input and io.write() for output.",
+  r: "Write R code. Use cat() for output. For input, open stdin with: con <- file(\"stdin\", open=\"r\"), then readLines(con, n=1), then close(con).",
+  html: "Write valid HTML5 with proper DOCTYPE, head, and body tags. No CSS frameworks unless asked.",
+  sql: "Write SQL compatible with MySQL 8. Always start with DROP TABLE IF EXISTS to clean up, then CREATE TABLE with AUTO_INCREMENT. Use INSERT, SELECT, WHERE, ORDER BY, DESC table_name. DROP TABLE at the end too.",
 };
 
 function normalizeLanguage(language = "cpp") {

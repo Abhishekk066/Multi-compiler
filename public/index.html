@@ -73,6 +73,41 @@
       href="https://compiler.abhishekdev.cloud/bash-programming"
       title="Bash Programming"
     />
+    <link
+      rel="alternate"
+      href="https://compiler.abhishekdev.cloud/rust-programming"
+      title="Rust Programming"
+    />
+    <link
+      rel="alternate"
+      href="https://compiler.abhishekdev.cloud/csharp-programming"
+      title="C# Programming"
+    />
+    <link
+      rel="alternate"
+      href="https://compiler.abhishekdev.cloud/perl-programming"
+      title="Perl Programming"
+    />
+    <link
+      rel="alternate"
+      href="https://compiler.abhishekdev.cloud/lua-programming"
+      title="Lua Programming"
+    />
+    <link
+      rel="alternate"
+      href="https://compiler.abhishekdev.cloud/r-programming"
+      title="R Programming"
+    />
+    <link
+      rel="alternate"
+      href="https://compiler.abhishekdev.cloud/html"
+      title="HTML"
+    />
+    <link
+      rel="alternate"
+      href="https://compiler.abhishekdev.cloud/sql-programming"
+      title="SQL"
+    />
 
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta
@@ -128,6 +163,12 @@
     <script src="/codemirror/mode/php/php.js"></script>
     <script src="/codemirror/mode/shell/shell.js"></script>
     <script src="/codemirror/mode/go/go.js"></script>
+    <script src="/codemirror/addon/mode/simple.js"></script>
+    <script src="/codemirror/mode/rust/rust.js"></script>
+    <script src="/codemirror/mode/perl/perl.js"></script>
+    <script src="/codemirror/mode/lua/lua.js"></script>
+    <script src="/codemirror/mode/r/r.js"></script>
+    <script src="/codemirror/mode/sql/sql.js"></script>
     <script src="/codemirror/addon/comment/comment.js"></script>
     <script src="/codemirror/addon/edit/matchbrackets.js"></script>
     <script src="/codemirror/addon/edit/closebrackets.js"></script>
@@ -312,6 +353,13 @@
         class="output-container transition-width transition-height w-full h-full"
       >
         <div id="output"></div>
+        <iframe
+          id="html-preview"
+          sandbox="allow-scripts allow-forms allow-modals"
+          style="display:none;width:100%;height:100%;border-radius:0;background:#fff;"
+          title="HTML Preview"
+        ></iframe>
+        <div id="sql-results" style="display:none;"></div>
         <div class="btn-ab">
           <button
             id="ai-fix-btn"
@@ -370,7 +418,7 @@
     <input
       type="file"
       id="import-file-input"
-      accept=".cpp,.cc,.c,.h,.hpp,.java,.py,.js,.mjs,.ts,.go,.kt,.kts,.rb,.php,.sh,.txt"
+      accept=".cpp,.cc,.c,.h,.hpp,.java,.py,.js,.mjs,.ts,.go,.kt,.kts,.rb,.php,.sh,.rs,.cs,.pl,.lua,.r,.html,.htm,.sql,.txt"
       style="display: none"
     />
     <div class="status-bar">

@@ -50,6 +50,7 @@ async function init() {
   let isRunning = false;
   let lastCompileError = "";
   let currentRunId = null;
+  let sqlOutputBuffer = "";
 
   const darkTerminalTheme = {
     background: "#030303",
@@ -280,10 +281,6 @@ async function init() {
     }
   });
 
-  const isMobileDevice = () =>
-    /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-    window.innerWidth <= 768;
-
   const LANG_CONFIG = {
     cpp: {
       mode: "text/x-c++src",
@@ -351,6 +348,48 @@ async function init() {
       filename: "main.sh",
       svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><rect x="2" y="3" width="20" height="18" rx="2" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="1"/><text x="12" y="16" text-anchor="middle" font-size="10" font-weight="bold" font-family="monospace">&gt;_</text></svg>',
     },
+    rust: {
+      mode: "text/x-rustsrc",
+      label: "Rust",
+      filename: "main.rs",
+      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><text x="12" y="17" text-anchor="middle" font-size="13" font-weight="bold" font-family="Arial">Rs</text></svg>',
+    },
+    csharp: {
+      mode: "text/x-csharp",
+      label: "C#",
+      filename: "main.cs",
+      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><text x="12" y="17" text-anchor="middle" font-size="13" font-weight="bold" font-family="Arial">C#</text></svg>',
+    },
+    perl: {
+      mode: "text/x-perl",
+      label: "Perl",
+      filename: "main.pl",
+      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><text x="12" y="17" text-anchor="middle" font-size="11" font-weight="bold" font-family="Arial">Perl</text></svg>',
+    },
+    lua: {
+      mode: "text/x-lua",
+      label: "Lua",
+      filename: "main.lua",
+      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><text x="12" y="17" text-anchor="middle" font-size="11" font-weight="bold" font-family="Arial">Lua</text></svg>',
+    },
+    r: {
+      mode: "text/x-rsrc",
+      label: "R",
+      filename: "main.r",
+      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><text x="12" y="17" text-anchor="middle" font-size="16" font-weight="bold" font-family="Arial">R</text></svg>',
+    },
+    html: {
+      mode: "text/html",
+      label: "HTML",
+      filename: "index.html",
+      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><rect width="24" height="24" rx="2" fill="currentColor" opacity="0.15"/><text x="12" y="16" text-anchor="middle" font-size="8" font-weight="bold" font-family="Arial">HTML</text></svg>',
+    },
+    sql: {
+      mode: "text/x-sql",
+      label: "SQL",
+      filename: "main.sql",
+      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><ellipse cx="12" cy="6" rx="8" ry="3" fill="currentColor"/><path d="M4 6v5c0 1.66 3.58 3 8 3s8-1.34 8-3V6" fill="currentColor" opacity="0.5"/><path d="M4 11v5c0 1.66 3.58 3 8 3s8-1.34 8-3v-5" fill="currentColor" opacity="0.3"/></svg>',
+    },
   };
 
   const pathParts = window.location.pathname.split("/");
@@ -365,7 +404,7 @@ async function init() {
     window.location.pathname.startsWith("/share/");
 
   if (!isShareRoute) {
-    history.replaceState(null, "", `/${currentLanguage}-programming`);
+    history.replaceState(null, "", currentLanguage === "html" ? "/html" : `/${currentLanguage}-programming`);
   } else {
     // Clean trailing slash for share URLs
     if (window.location.href.endsWith("/")) {
@@ -389,13 +428,16 @@ async function init() {
 
       li.addEventListener("click", () => {
         if (currentLanguage === key) return;
-        window.location.href = `/${key}-programming`;
+        window.location.href = key === "html" ? "/html" : `/${key}-programming`;
       });
       sidebarList.appendChild(li);
     });
   }
 
   renderSidebar();
+
+  const activeItem = sidebarList?.querySelector(".sidebar-item.active");
+  if (activeItem) activeItem.scrollIntoView({ block: "end" });
 
   async function fetchSharedCode() {
     const pathName = window.location.pathname;
@@ -426,9 +468,133 @@ async function init() {
     }
   }
 
+  function showHtmlPreview(htmlCode) {
+    const preview = document.getElementById("html-preview");
+    if (!preview) return;
+    const blob = new Blob([htmlCode], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    if (preview._lastUrl) URL.revokeObjectURL(preview._lastUrl);
+    preview._lastUrl = url;
+    preview.src = url;
+    outputElement.style.display = "none";
+    preview.style.display = "block";
+    if (window.innerWidth <= 768) showOutput();
+    else safeFit();
+  }
+
+  function hideHtmlPreview() {
+    const preview = document.getElementById("html-preview");
+    if (!preview || preview.style.display === "none") return;
+    preview.style.display = "none";
+    if (preview._lastUrl) {
+      URL.revokeObjectURL(preview._lastUrl);
+      preview._lastUrl = null;
+      preview.src = "";
+    }
+    outputElement.style.display = "block";
+    safeFit();
+  }
+
+  function parseMySQLOutput(text) {
+    const lines = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n").split("\n");
+    const blocks = [];
+    let i = 0;
+    while (i < lines.length) {
+      const trimmed = lines[i].trim();
+      if (/^\+[-+]+\+$/.test(trimmed)) {
+        const table = { headers: [], rows: [] };
+        i++;
+        if (i < lines.length && lines[i].trim().startsWith("|")) {
+          table.headers = lines[i].trim().slice(1, -1).split("|").map((c) => c.trim());
+          i++;
+        }
+        if (i < lines.length && /^\+[-+]+\+$/.test(lines[i].trim())) i++;
+        while (i < lines.length && lines[i].trim().startsWith("|")) {
+          table.rows.push(lines[i].trim().slice(1, -1).split("|").map((c) => c.trim()));
+          i++;
+        }
+        if (i < lines.length && /^\+[-+]+\+$/.test(lines[i].trim())) i++;
+        blocks.push({ type: "table", headers: table.headers, rows: table.rows });
+      } else if (trimmed) {
+        blocks.push({ type: "message", text: trimmed });
+        i++;
+      } else {
+        i++;
+      }
+    }
+    return blocks;
+  }
+
+  function renderSqlResults(rawOutput) {
+    const container = document.getElementById("sql-results");
+    if (!container) return;
+    container.innerHTML = "";
+    const blocks = parseMySQLOutput(rawOutput);
+    if (!blocks.length) {
+      container.innerHTML = '<p class="sql-message">Query executed. No output.</p>';
+    } else {
+      for (const block of blocks) {
+        if (block.type === "table") {
+          const wrapper = document.createElement("div");
+          wrapper.className = "sql-table-wrapper";
+          const tbl = document.createElement("table");
+          tbl.className = "sql-table";
+          const thead = document.createElement("thead");
+          const hrow = document.createElement("tr");
+          block.headers.forEach((h) => {
+            const th = document.createElement("th");
+            th.textContent = h;
+            hrow.appendChild(th);
+          });
+          thead.appendChild(hrow);
+          tbl.appendChild(thead);
+          const tbody = document.createElement("tbody");
+          block.rows.forEach((row) => {
+            const tr = document.createElement("tr");
+            row.forEach((cell) => {
+              const td = document.createElement("td");
+              if (cell === "NULL") {
+                td.textContent = "NULL";
+                td.className = "sql-null";
+              } else {
+                td.textContent = cell;
+              }
+              tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          });
+          tbl.appendChild(tbody);
+          wrapper.appendChild(tbl);
+          const meta = document.createElement("div");
+          meta.className = "sql-table-meta";
+          meta.textContent = `${block.rows.length} row${block.rows.length !== 1 ? "s" : ""}`;
+          wrapper.appendChild(meta);
+          container.appendChild(wrapper);
+        } else {
+          const p = document.createElement("p");
+          p.className = block.text.startsWith("ERROR") ? "sql-error" : "sql-message";
+          p.textContent = block.text;
+          container.appendChild(p);
+        }
+      }
+    }
+    outputElement.style.display = "none";
+    container.style.display = "block";
+  }
+
+  function hideSqlResults() {
+    const container = document.getElementById("sql-results");
+    if (!container || container.style.display === "none") return;
+    container.style.display = "none";
+    outputElement.style.display = "block";
+    safeFit();
+  }
+
   function applyLanguage(langKey) {
     const cfg = LANG_CONFIG[langKey];
     if (!cfg) return;
+    if (langKey !== "html") hideHtmlPreview();
+    if (langKey !== "sql") hideSqlResults();
     currentLanguage = langKey;
     if (editor) editor.setOption("mode", cfg.mode);
     if (statusLang) statusLang.textContent = cfg.label;
@@ -436,6 +602,10 @@ async function init() {
     const subtitle = document.getElementById("ai-write-subtitle");
     if (subtitle)
       subtitle.textContent = `Describe the ${cfg.label} program you want to create`;
+    if (langKey === "html") {
+      const fixBtn = document.getElementById("ai-fix-btn");
+      if (fixBtn) fixBtn.style.display = "none";
+    }
   }
 
   window._lastDefaultCode = "";
@@ -519,7 +689,7 @@ async function init() {
   async function encryptText(text) {
     if (!hasSubtleCrypto) {
       // Insecure context fallback: encode only
-      return "b64:" + btoa(unescape(encodeURIComponent(text)));
+      return "b64:" + btoa(String.fromCharCode(...new TextEncoder().encode(text)));
     }
     const key = await getSessionKey();
     const iv = crypto.getRandomValues(new Uint8Array(12));
@@ -539,7 +709,7 @@ async function init() {
   async function decryptText(payload) {
     try {
       if (payload.startsWith("b64:")) {
-        return decodeURIComponent(escape(atob(payload.slice(4))));
+        return new TextDecoder().decode(Uint8Array.from(atob(payload.slice(4)), (c) => c.charCodeAt(0)));
       }
       if (!payload.startsWith("enc:") || !hasSubtleCrypto) return null;
       const key = await getSessionKey();
@@ -763,6 +933,13 @@ async function init() {
   }
 
   function runCode() {
+    if (currentLanguage === "html") {
+      showHtmlPreview(editor.getValue());
+      return;
+    }
+
+    hideHtmlPreview();
+
     if (!canSendCode()) {
       setRunLoading(false);
       return;
@@ -823,52 +1000,72 @@ async function init() {
       return;
     }
 
+    const isSql = currentLanguage === "sql";
+
     if (data.type === "compiled") {
     } else if (data.type === "running") {
       currentRunId = data.runId || null;
       fitTerminalNow();
       isRunning = true;
-      term.options.disableStdin = false;
-      term.options.cursorBlink = true;
-      writeTerminal("\x1b[?25h");
-      setRunLoading(false);
-      if (isMobileDevice()) {
-        queueTerminalFocus();
+      if (isSql) {
+        sqlOutputBuffer = "";
+        const container = document.getElementById("sql-results");
+        if (container) {
+          container.innerHTML = '<p class="sql-message sql-loading">Running query…</p>';
+          outputElement.style.display = "none";
+          container.style.display = "block";
+        }
       } else {
+        term.options.disableStdin = false;
+        term.options.cursorBlink = true;
+        writeTerminal("\x1b[?25h");
         queueTerminalFocus();
       }
+      setRunLoading(false);
     } else if (data.type === "output") {
       fitTerminalNow();
       isRunning = true;
-      term.options.disableStdin = false;
-      term.options.cursorBlink = true;
-      writeTerminal(data.message);
-      queueTerminalFocus();
+      if (isSql) {
+        sqlOutputBuffer += data.message;
+      } else {
+        term.options.disableStdin = false;
+        term.options.cursorBlink = true;
+        writeTerminal(data.message);
+        queueTerminalFocus();
+      }
     } else if (data.type === "stderr") {
       fitTerminalNow();
       isRunning = true;
       lastCompileError += data.message || "";
-      term.options.disableStdin = false;
-      term.options.cursorBlink = true;
-      writeTerminal("\x1b[31m" + data.message + "\x1b[0m");
+      if (isSql) {
+        sqlOutputBuffer += data.message;
+      } else {
+        term.options.disableStdin = false;
+        term.options.cursorBlink = true;
+        writeTerminal("\x1b[31m" + data.message + "\x1b[0m");
+      }
     } else if (data.type === "error") {
       fitTerminalNow();
-      writeTerminal("\x1b[31m" + data.message + "\x1b[0m");
       isRunning = false;
       currentRunId = null;
       inputBuffer = "";
       lastCompileError = data.message;
       term.options.disableStdin = true;
       term.options.cursorBlink = false;
-      writeTerminal("\x1b[?25l");
-      if (aiFixBtn) {
-        aiFixBtn.style.display = "flex";
+      if (isSql) {
+        sqlOutputBuffer += data.message || "";
+        renderSqlResults(sqlOutputBuffer);
+        if (aiFixBtn) aiFixBtn.style.display = "flex";
+      } else {
+        writeTerminal("\x1b[31m" + data.message + "\x1b[0m");
+        writeTerminal("\x1b[?25l");
+        if (aiFixBtn) aiFixBtn.style.display = "flex";
+        const outputMsg =
+          data.exitCode === 0
+            ? ""
+            : `\r\n\x1b[90m=== Code Exited With Errors ===\x1b[0m`;
+        writeTerminal("\r\n" + outputMsg + "\r\n");
       }
-      const outputMsg =
-        data.exitCode === 0
-          ? ""
-          : `\r\n\x1b[90m=== Code Exited With Errors ===\x1b[0m`;
-      writeTerminal("\r\n" + outputMsg + "\r\n");
       setRunLoading(false);
     } else if (data.type === "finished") {
       if (!isRunning) return;
@@ -877,20 +1074,28 @@ async function init() {
       inputBuffer = "";
       term.options.disableStdin = true;
       term.options.cursorBlink = false;
-      const outputMsg =
-        data.exitCode === 0
-          ? `\r\n\x1b[34mExecution time: ${data.timer}s\x1b[0m\r\n\x1b[90m=== Code Execution Successful ===\x1b[0m`
-          : `\r\n\x1b[34mExecution time: ${data.timer}s\x1b[0m\r\n\x1b[90m=== Code Exited With Errors ===\x1b[0m`;
-      writeTerminal("\r\n" + outputMsg + "\r\n");
-      document.getElementById("execution-time").textContent = data.timer + "s";
-      if (data.exitCode !== 0 && lastCompileError && aiFixBtn) {
-        aiFixBtn.style.display = "flex";
+      if (isSql) {
+        renderSqlResults(sqlOutputBuffer);
+        document.getElementById("execution-time").textContent = data.timer + "s";
+        if (data.exitCode !== 0 && lastCompileError && aiFixBtn) {
+          aiFixBtn.style.display = "flex";
+        }
+      } else {
+        const outputMsg =
+          data.exitCode === 0
+            ? `\r\n\x1b[34mExecution time: ${data.timer}s\x1b[0m\r\n\x1b[90m=== Code Execution Successful ===\x1b[0m`
+            : `\r\n\x1b[34mExecution time: ${data.timer}s\x1b[0m\r\n\x1b[90m=== Code Exited With Errors ===\x1b[0m`;
+        writeTerminal("\r\n" + outputMsg + "\r\n");
+        document.getElementById("execution-time").textContent = data.timer + "s";
+        if (data.exitCode !== 0 && lastCompileError && aiFixBtn) {
+          aiFixBtn.style.display = "flex";
+        }
       }
       setRunLoading(false);
     }
   }
 
-  function handleSocketError(error) {
+  function handleSocketError() {
     isRunning = false;
     currentRunId = null;
     inputBuffer = "";
@@ -900,7 +1105,7 @@ async function init() {
     setRunLoading(false);
   }
 
-  function handleSocketClose(event) {
+  function handleSocketClose() {
     isRunning = false;
     currentRunId = null;
     inputBuffer = "";
@@ -930,22 +1135,6 @@ async function init() {
 
   // --- Clipboard helpers (browser-native first, Clipboard API fallback) ---
   function copyTextToClipboard(text) {
-    const helper = document.createElement("textarea");
-    helper.value = text;
-    helper.setAttribute("readonly", "");
-    helper.style.position = "fixed";
-    helper.style.top = "-9999px";
-    document.body.appendChild(helper);
-    helper.select();
-    helper.setSelectionRange(0, text.length);
-
-    let copied = false;
-    try {
-      copied = document.execCommand("copy");
-    } catch (e) {}
-    helper.remove();
-
-    if (copied) return Promise.resolve();
     if (navigator.clipboard && navigator.clipboard.writeText) {
       return navigator.clipboard.writeText(text);
     }
@@ -953,20 +1142,6 @@ async function init() {
   }
 
   async function readClipboardText() {
-    const helper = document.createElement("textarea");
-    helper.style.position = "fixed";
-    helper.style.top = "-9999px";
-    document.body.appendChild(helper);
-    helper.focus();
-
-    let pasted = false;
-    try {
-      pasted = document.execCommand("paste");
-    } catch (e) {}
-    const text = helper.value;
-    helper.remove();
-
-    if (pasted && text) return text;
     if (navigator.clipboard && navigator.clipboard.readText) {
       return navigator.clipboard.readText();
     }
@@ -979,7 +1154,7 @@ async function init() {
       .then(() => {
         showToast("Code copied to clipboard!");
       })
-      .catch((err) => {
+      .catch(() => {
         showToast("Failed to copy code", true);
       });
   }
@@ -1237,6 +1412,12 @@ async function init() {
     importFileInput.addEventListener("change", () => {
       const file = importFileInput.files[0];
       if (!file) return;
+
+      if (file.size > 500_000) {
+        showToast("File too large (max 500 KB)", true);
+        importFileInput.value = "";
+        return;
+      }
 
       const reader = new FileReader();
       reader.onload = () => {
@@ -1585,12 +1766,16 @@ async function init() {
   function showToast(message, isError = false) {
     const toast = document.createElement("div");
     toast.className = "toast";
+    const icon = document.createElement("i");
     if (isError) {
       toast.style.borderLeft = "4px solid var(--error-text)";
-      toast.innerHTML = `<i class="fas fa-times-circle" style="color: var(--error-text)"></i> ${message}`;
+      icon.className = "fas fa-times-circle";
+      icon.style.color = "var(--error-text)";
     } else {
-      toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+      icon.className = "fas fa-check-circle";
     }
+    toast.appendChild(icon);
+    toast.appendChild(document.createTextNode(" " + message));
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 5000);
   }
@@ -2241,8 +2426,12 @@ async function init() {
         fileNameEditor.textContent = aiFileName;
         document.querySelector("title").textContent = aiFileName;
         await typeCodeIntoEditor(data.code, editor);
+        if (currentLanguage === "html") {
+          showHtmlPreview(data.code);
+        }
         aiWriteModal.style.display = "none";
         aiWritePrompt.value = "";
+        sessionStorage.removeItem("aiLastPrompt");
         updateAiCharCount();
         showToast("Code generated by AI! Review and run it.");
 

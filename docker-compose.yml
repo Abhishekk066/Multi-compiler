@@ -6,6 +6,42 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=6600
+      - SESSION_SECRET=${SESSION_SECRET}
+      - MAIN_DOMAIN=${MAIN_DOMAIN}
+      - REQUESTED_DOMAIN=${REQUESTED_DOMAIN}
+      - OLLAMA_HOST=${OLLAMA_HOST}
+      - OLLAMA_MODEL=${OLLAMA_MODEL}
+      - OBFUSCATE_ON_START=${OBFUSCATE_ON_START:-false}
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_USER=compiler
+      - MYSQL_PASSWORD=compiler_pass
+      - MYSQL_DATABASE=sandbox
+    depends_on:
+      mysql:
+        condition: service_healthy
     tmpfs:
       - /tmp:size=256m,mode=1777
     restart: unless-stopped
+
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_pass}
+      MYSQL_DATABASE: sandbox
+      MYSQL_USER: compiler
+      MYSQL_PASSWORD: compiler_pass
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-ucompiler", "-pcompiler_pass"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+volumes:
+  mysql_data:

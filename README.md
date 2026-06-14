@@ -4,7 +4,7 @@ A browser-based code editor and runner supporting 11 programming languages, with
 
 ## Features
 
-- **11 languages** — C++, C, Java, Python, JavaScript, TypeScript, Go, Ruby, PHP, Kotlin, Bash
+- **18 languages** — C++, C, Java, Python, JavaScript, TypeScript, Go, Ruby, PHP, Kotlin, Bash, Rust, C#, Perl, Lua, R, HTML, SQL
 - **Real-time execution** via WebSocket — streaming stdout/stderr and interactive stdin
 - **AI assistance** (powered by Ollama) — fix broken code or generate code from a prompt
 - **Code sharing** — generate a shareable URL or QR code for any snippet
@@ -39,6 +39,13 @@ ruby        — Ruby
 php         — PHP
 kotlinc     — Kotlin
 bash        — Bash
+rustc       — Rust
+mcs + mono  — C# (Mono)
+perl        — Perl
+lua5.4      — Lua
+Rscript     — R
+            — HTML (browser preview, no backend tool needed)
+mysql       — SQL (MySQL 8)
 ```
 
 Or just use Docker (see below).
@@ -65,6 +72,11 @@ Copy `.env` and adjust as needed:
 | `MAIN_DOMAIN` | Public domain for share links | `https://compiler.abhishekdev.cloud` |
 | `REQUESTED_DOMAIN` | Partner domain for `/send-url` | — |
 | `OBFUSCATE_ON_START` | Obfuscate `public/script.js` on startup | `false` |
+| `MYSQL_HOST` | MySQL host for SQL runner | `127.0.0.1` |
+| `MYSQL_PORT` | MySQL port | `3306` |
+| `MYSQL_USER` | MySQL user | `root` |
+| `MYSQL_PASSWORD` | MySQL password | — |
+| `MYSQL_DATABASE` | MySQL database | `sandbox` |
 
 ### Docker
 
@@ -124,6 +136,13 @@ Server sends back messages with `type`: `running` | `output` | `stderr` | `compi
 | PHP | `php` |
 | Kotlin | `kotlinc` + `java` |
 | Bash | `bash` |
+| Rust | `rustc` |
+| C# | `mcs` + `mono` |
+| Perl | `perl` |
+| Lua | `lua5.4` |
+| R | `Rscript` |
+| HTML | browser preview (Blob URL iframe) |
+| SQL | `mysql` CLI (MySQL 8) |
 
 ## URL patterns
 

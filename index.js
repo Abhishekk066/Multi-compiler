@@ -2,11 +2,21 @@ import cors from 'cors';
 import 'dotenv/config';
 import EventEmitter from 'events';
 import express from 'express';
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
 import http from 'http';
 import NodeCache from 'node-cache';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { WebSocketServer } from 'ws';
+
+process.on('unhandledRejection', (reason) => {
+  console.error('Unhandled Rejection:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+});
 
 import aiRoutes from './routes/ai.js';
 import createCodeRouter from './routes/code.js';
@@ -35,6 +45,13 @@ const codeCache = new NodeCache({
 app.set('trust proxy', true);
 
 app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
+  }),
+);
+
+app.use(
   cors({
     origin:
       NODE_ENV === 'production'
@@ -46,6 +63,14 @@ app.use(
     credentials: true,
   }),
 );
+
+const aiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 12,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please wait a moment.' },
+});
 
 app.use(
   express.urlencoded({
@@ -95,7 +120,11 @@ app.get(['/c/:id', '/share/:id'], (req, res) => {
 
 /* -------------------------------- Routes -------------------------------- */
 
-app.use('/api/ai', aiRoutes);
+app.use('/api/ai', aiLimiter, aiRoutes);
+
+app.get('/html', (_req, res) => {
+  return res.sendFile(path.join(__dirname, 'public/index.html'));
+});
 
 app.get('/:lang-programming', (req, res, next) => {
   const lang = req.params.lang;

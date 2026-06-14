@@ -2,3 +2,6 @@ node_modules
 outputs
 code
 code.cpp
+.env
+.git
+*.log

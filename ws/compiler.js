@@ -1,6 +1,6 @@
 import { spawn } from 'child_process';
 import crypto from 'crypto';
-import { existsSync } from 'fs';
+import { existsSync, mkdirSync } from 'fs';
 import fs from 'fs/promises';
 import os from 'os';
 import path from 'path';
@@ -98,6 +98,46 @@ const LANGUAGES = {
     inlineCode: true,
     run: (_src, _out, code) => ['bash', ['-c', code]],
   },
+
+  rust: {
+    ext: '.rs',
+    compile: (src, out) => ['rustc', [src, '-o', out, '-C', 'debuginfo=0']],
+    run: (_src, out) => [out, []],
+  },
+
+  csharp: {
+    ext: '.cs',
+    compile: (src, out) => ['mcs', [`-out:${out}.exe`, src]],
+    run: (_src, out) => ['mono', [out]],
+    extraOut: (out) => `${out}.exe`,
+  },
+
+  perl: {
+    ext: '.pl',
+    inlineCode: true,
+    run: (_src, _out, code) => ['perl', ['-e', `$|=1;\n${code}`]],
+  },
+
+  lua: {
+    ext: '.lua',
+    run: (src) => ['lua', [src]],
+  },
+
+  r: {
+    ext: '.r',
+    run: (src) => ['Rscript', ['--vanilla', src]],
+  },
+
+  sql: {
+    ext: '.sql',
+    run: (src) => {
+      const host = process.env.MYSQL_HOST || '127.0.0.1';
+      const port = process.env.MYSQL_PORT || '3306';
+      const user = process.env.MYSQL_USER || 'root';
+      const db   = process.env.MYSQL_DATABASE || 'sandbox';
+      return ['bash', ['-c', `mysql -t --connect-timeout=5 -h "${host}" -P "${port}" -u "${user}" "${db}" < "${src}"`]];
+    },
+  },
 };
 
 function normalizeLanguage(language = 'cpp') {
@@ -136,6 +176,26 @@ function normalizeLanguage(language = 'cpp') {
     sh: 'bash',
     shell: 'bash',
     bash: 'bash',
+
+    rs: 'rust',
+    rust: 'rust',
+
+    cs: 'csharp',
+    csharp: 'csharp',
+    'c#': 'csharp',
+    dotnet: 'csharp',
+
+    pl: 'perl',
+    perl: 'perl',
+
+    lua: 'lua',
+
+    r: 'r',
+    rscript: 'r',
+
+    sql: 'sql',
+    mysql: 'sql',
+    sqlite: 'sql',
   };
 
   return aliases[lang] || 'cpp';
@@ -200,12 +260,24 @@ function getRuntimeEnv(langKey) {
     env.PYTHONUNBUFFERED = '1';
   }
 
+  if (langKey === 'sql' && process.env.MYSQL_PASSWORD) {
+    env.MYSQL_PWD = process.env.MYSQL_PASSWORD;
+  }
+
+  if (langKey === 'go') {
+    env.GOTMPDIR = '/app/tmp';
+    env.GOCACHE = '/app/tmp/go-cache';
+  }
+
   return env;
 }
 
 /**
  * @param {import('ws').WebSocketServer} wss
  */
+const binDir = '/app/tmp';
+try { mkdirSync(binDir, { recursive: true }); } catch (_) {}
+
 export function setupCompilerWS(wss) {
   wss.on('connection', async (ws) => {
     const clientId = crypto.randomUUID();
@@ -240,6 +312,8 @@ export function setupCompilerWS(wss) {
       activeRunId = null;
     }
 
+    const MAX_EXEC_MS = 30_000;
+
     function spawnRunProcess(cmd, args, langKey, runId) {
       const [finalCmd, finalArgs] = prepareRunCommand(cmd, args);
 
@@ -262,6 +336,20 @@ export function setupCompilerWS(wss) {
       activeProcess = proc;
       activeRunId = runId;
       executionStartTime = performance.now();
+
+      const killTimer = setTimeout(() => {
+        if (activeRunId === runId && activeProcess) {
+          activeProcess.kill();
+          safeSend({
+            type: 'stderr',
+            runId,
+            message: '\r\n\x1b[33mExecution timed out (30s limit).\x1b[0m\r\n',
+          });
+        }
+      }, MAX_EXEC_MS);
+
+      proc.on('close', () => clearTimeout(killTimer));
+      proc.on('error', () => clearTimeout(killTimer));
 
       safeSend({
         type: 'running',
@@ -337,6 +425,8 @@ export function setupCompilerWS(wss) {
 
       const [compileCmd, compileArgs] = lang.compile(sourceFile, compileOut);
 
+      const MAX_BUF = 65_536;
+
       return new Promise((resolve) => {
         let compileError = '';
         let compileOutput = '';
@@ -346,14 +436,14 @@ export function setupCompilerWS(wss) {
         });
 
         compile.stderr.on('data', (err) => {
-          compileError += err.toString();
+          if (compileError.length < MAX_BUF) compileError += err.toString();
         });
 
         compile.stdout.on('data', (data) => {
-          compileOutput += data.toString();
+          if (compileOutput.length < MAX_BUF) compileOutput += data.toString();
         });
 
-        compile.on('close', (code) => {
+        compile.on('close', async (code) => {
           if (code !== 0) {
             const cleanError = cleanCompileError(compileError, lang.ext);
 
@@ -364,6 +454,10 @@ export function setupCompilerWS(wss) {
 
             resolve(false);
             return;
+          }
+
+          if (langKey !== 'java') {
+            try { await fs.chmod(outputFile, 0o755); } catch (_) {}
           }
 
           resolve(true);
@@ -459,6 +553,12 @@ export function setupCompilerWS(wss) {
             sourceCode = normalizeBashCode(sourceCode);
           }
 
+          if (langKey === 'r') {
+            sourceCode =
+              '.stdin_con <- file("stdin", open = "r")\nstdin <- function() .stdin_con\n' +
+              sourceCode;
+          }
+
           // Inline execution: pass code directly, no file written
           if (lang.inlineCode) {
             const [runCmd, runArgs] = lang.run(null, null, sourceCode);
@@ -471,7 +571,7 @@ export function setupCompilerWS(wss) {
           const baseName = langKey === 'java' ? 'Main' : `code_${clientId}`;
           const sourceDir = langKey === 'java' ? javaOutDir : tmpDir;
           const sourceFile = path.join(sourceDir, `${baseName}${lang.ext}`);
-          const outputFile = path.join(tmpDir, `code_${clientId}.out`);
+          const outputFile = path.join(binDir, `code_${clientId}.out`);
 
           currentSourceFile = sourceFile;
           currentOutputFile = outputFile;
@@ -518,6 +618,12 @@ export function setupCompilerWS(wss) {
         }
       } catch (err) {
         console.error('Compiler WS Error:', err);
+
+        if (activeProcess) {
+          activeProcess.kill();
+          activeProcess = null;
+          activeRunId = null;
+        }
 
         safeSend({
           type: 'error',

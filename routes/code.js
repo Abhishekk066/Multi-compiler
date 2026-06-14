@@ -1,12 +1,7 @@
 import crypto from "crypto";
 import { Router } from "express";
 import fetch from "node-fetch";
-import path from "path";
 import QRCode from "qrcode";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 function generateShortId(length = 8) {
   const chars =
@@ -138,6 +133,94 @@ echo "Hello, " . $name;
 read -p "Enter your name: " name
 printf "Hello, %s" "$name"`,
   },
+
+  rust: {
+    filename: "main.rs",
+    code: `use std::io::{self, Write};
+
+fn main() {
+    print!("Enter your name: ");
+    io::stdout().flush().unwrap();
+    let mut name = String::new();
+    io::stdin().read_line(&mut name).unwrap();
+    let name = name.trim();
+    print!("Hello, {}", name);
+}`,
+  },
+
+  csharp: {
+    filename: "main.cs",
+    code: `using System;
+
+class Program {
+    static void Main(string[] args) {
+        Console.Write("Enter your name: ");
+        string name = Console.ReadLine();
+        Console.Write("Hello, " + name);
+    }
+}`,
+  },
+
+  perl: {
+    filename: "main.pl",
+    code: `print "Enter your name: ";
+chomp(my $name = <STDIN>);
+print "Hello, $name";`,
+  },
+
+  lua: {
+    filename: "main.lua",
+    code: `io.write("Enter your name: ")
+io.flush()
+local name = io.read()
+io.write("Hello, " .. name)`,
+  },
+
+  r: {
+    filename: "main.r",
+    code: `con <- file("stdin", open = "r")
+cat("Enter your name: ")
+name <- readLines(con, n = 1)
+cat("Hello,", name)
+close(con)`,
+  },
+
+  html: {
+    filename: "index.html",
+    code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hello</title>
+</head>
+<body>
+  <h1>Hello, World!</h1>
+  <p>Welcome to HTML.</p>
+</body>
+</html>`,
+  },
+
+  sql: {
+    filename: "main.sql",
+    code: `DROP TABLE IF EXISTS users;
+
+CREATE TABLE users (
+  id   INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  age  INT
+);
+
+INSERT INTO users (name, age) VALUES ('Alice', 30);
+INSERT INTO users (name, age) VALUES ('Bob', 25);
+INSERT INTO users (name, age) VALUES ('Charlie', 35);
+
+DESC users;
+
+SELECT * FROM users;
+SELECT name FROM users WHERE age > 28 ORDER BY name ASC;
+
+DROP TABLE users;`,
+  },
 };
 
 function normalizeLanguage(language = "cpp") {
@@ -176,6 +259,29 @@ function normalizeLanguage(language = "cpp") {
     sh: "bash",
     shell: "bash",
     bash: "bash",
+
+    rs: "rust",
+    rust: "rust",
+
+    cs: "csharp",
+    csharp: "csharp",
+    "c#": "csharp",
+    dotnet: "csharp",
+
+    pl: "perl",
+    perl: "perl",
+
+    lua: "lua",
+
+    r: "r",
+    rscript: "r",
+
+    html: "html",
+    htm: "html",
+
+    sql: "sql",
+    mysql: "sql",
+    sqlite: "sql",
   };
 
   return aliases[lang] || "cpp";
@@ -374,7 +480,7 @@ export default function createCodeRouter(codeCache) {
     }
   });
 
-  router.get("/languages", (req, res) => {
+  router.get("/languages", (_req, res) => {
     const list = Object.entries(DEFAULT_CODES).map(([key, val]) => ({
       key,
       filename: val.filename,
