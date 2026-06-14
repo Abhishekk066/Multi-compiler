@@ -27,7 +27,7 @@ services:
 
   mysql:
     image: mysql:8
-    container_name: multi_compiler
+    container_name: multi_compiler_mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_pass}
       MYSQL_DATABASE: sandbox
