@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 - Page Not Found</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0a0a0f;
+      --bg-card: rgba(255, 255, 255, 0.04);
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #e4e4e7;
+      --text-muted: rgba(255, 255, 255, 0.5);
+      --accent: #a855f7;
+      --accent-glow: rgba(168, 85, 247, 0.3);
+      --btn-bg: linear-gradient(135deg, #a855f7, #6d28d9);
+      --btn-shadow: rgba(168, 85, 247, 0.35);
+      --loader-track: rgba(255, 255, 255, 0.08);
+      --particle-color: rgba(168, 85, 247, 0.15);
+    }
+
+    .day {
+      --bg: #f4f4f8;
+      --bg-card: rgba(255, 255, 255, 0.7);
+      --border: rgba(0, 0, 0, 0.08);
+      --text: #18181b;
+      --text-muted: rgba(0, 0, 0, 0.45);
+      --accent: #7c3aed;
+      --accent-glow: rgba(124, 58, 237, 0.2);
+      --btn-bg: linear-gradient(135deg, #7c3aed, #5b21b6);
+      --btn-shadow: rgba(124, 58, 237, 0.25);
+      --loader-track: rgba(0, 0, 0, 0.06);
+      --particle-color: rgba(124, 58, 237, 0.08);
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100dvh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Animated background gradient */
+    body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 600px 400px at 30% 20%, var(--accent-glow), transparent),
+        radial-gradient(ellipse 500px 350px at 70% 80%, var(--accent-glow), transparent);
+      animation: bgShift 8s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+
+    @keyframes bgShift {
+      0% {
+        opacity: 0.5;
+        transform: scale(1);
+      }
+
+      100% {
+        opacity: 0.8;
+        transform: scale(1.1);
+      }
+    }
+
+    /* Floating particles */
+    .particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: var(--particle-color);
+      border-radius: 50%;
+      animation: float linear infinite;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(-10vh) scale(1);
+        opacity: 0;
+      }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 48px 40px;
+      max-width: 440px;
+      width: 90%;
+      border-radius: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.12);
+      animation: cardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes cardIn {
+      0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.96);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .error-code {
+      font-size: 7rem;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--accent), #ec4899);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: glitch 3s ease-in-out infinite;
+      position: relative;
+    }
+
+    @keyframes glitch {
+
+      0%,
+      90%,
+      100% {
+        transform: translate(0);
+      }
+
+      92% {
+        transform: translate(-3px, 1px);
+      }
+
+      94% {
+        transform: translate(3px, -1px);
+      }
+
+      96% {
+        transform: translate(-2px, -1px);
+      }
+
+      98% {
+        transform: translate(2px, 1px);
+      }
+    }
+
+    .message {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    /* Progress ring */
+    .progress-ring {
+      margin: 0 auto 24px;
+      width: 64px;
+      height: 64px;
+      position: relative;
+    }
+
+    .progress-ring svg {
+      transform: rotate(-90deg);
+      width: 64px;
+      height: 64px;
+    }
+
+    .progress-ring .track {
+      fill: none;
+      stroke: var(--loader-track);
+      stroke-width: 4;
+    }
+
+    .progress-ring .fill {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-dasharray: 163;
+      stroke-dashoffset: 163;
+      transition: stroke-dashoffset 1s linear;
+      filter: drop-shadow(0 0 4px var(--accent-glow));
+    }
+
+    .countdown-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .btn-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 28px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: inherit;
+      background: var(--btn-bg);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px var(--btn-shadow);
+    }
+
+    .btn-home:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--btn-shadow);
+    }
+
+    .btn-home:active {
+      transform: translateY(0);
+    }
+
+    .btn-home svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 36px 24px;
+      }
+
+      .error-code {
+        font-size: 5rem;
+      }
+
+      .message {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="particles" id="particles"></div>
+
+  <div class="container">
+    <div class="error-code">404</div>
+    <p class="message">This page doesn't exist or the shared code has expired.</p>
+
+    <div class="progress-ring">
+      <svg viewBox="0 0 56 56">
+        <circle class="track" cx="28" cy="28" r="26" />
+        <circle class="fill" id="ring" cx="28" cy="28" r="26" />
+      </svg>
+      <span class="countdown-text" id="countdown">3</span>
+    </div>
+
+    <a href="/" class="btn-home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+        <polyline points="9 22 9 12 15 12 15 22" />
+      </svg>
+      Go Home
+    </a>
+  </div>
+
+  <script>
+    // Auto-detect theme: sessionStorage > prefers-color-scheme
+    (function () {
+      const saved = sessionStorage.getItem('themeMode');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const isDark = saved ? saved === 'dark' : prefersDark;
+      if (!isDark) document.documentElement.classList.add('day');
+    })();
+
+    // Floating particles
+    (function () {
+      const container = document.getElementById('particles');
+      for (let i = 0; i < 20; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.width = p.style.height = (3 + Math.random() * 6) + 'px';
+        p.style.animationDuration = (6 + Math.random() * 10) + 's';
+        p.style.animationDelay = (Math.random() * 8) + 's';
+        container.appendChild(p);
+      }
+    })();
+
+    // Countdown with progress ring
+    (function () {
+      const TOTAL = 3;
+      let remaining = TOTAL;
+      const ring = document.getElementById('ring');
+      const text = document.getElementById('countdown');
+      const circumference = 2 * Math.PI * 26; // r=26
+
+      function update() {
+        const progress = (TOTAL - remaining) / TOTAL;
+        ring.style.strokeDashoffset = circumference * (1 - progress);
+        text.textContent = remaining;
+      }
+
+      update();
+
+      const interval = setInterval(function () {
+        remaining--;
+        update();
+        if (remaining <= 0) {
+          clearInterval(interval);
+          window.location.href = '/';
+        }
+      }, 3000);
+    })();
+  </script>
+</body>
+
+</html>

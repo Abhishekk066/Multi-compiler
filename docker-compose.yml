@@ -1,0 +1,11 @@
+services:
+  compiler:
+    build: .
+    ports:
+      - "6600:6600"
+    environment:
+      - NODE_ENV=production
+      - PORT=6600
+    tmpfs:
+      - /tmp:size=256m,mode=1777
+    restart: unless-stopped
