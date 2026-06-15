@@ -7,6 +7,19 @@ import path from 'path';
 import { performance } from 'perf_hooks';
 import { fileURLToPath } from 'url';
 
+const wsConnections = new Map();
+const WS_MAX_PER_IP = 5;
+const WS_WINDOW_MS = 60_000;
+
+function wsRateCheck(ip) {
+  const now = Date.now();
+  const entry = wsConnections.get(ip) || { count: 0, reset: now + WS_WINDOW_MS };
+  if (now > entry.reset) { entry.count = 0; entry.reset = now + WS_WINDOW_MS; }
+  entry.count++;
+  wsConnections.set(ip, entry);
+  return entry.count <= WS_MAX_PER_IP;
+}
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT_DIR = path.join(__dirname, '..');
@@ -279,7 +292,12 @@ const binDir = '/app/tmp';
 try { mkdirSync(binDir, { recursive: true }); } catch (_) {}
 
 export function setupCompilerWS(wss) {
-  wss.on('connection', async (ws) => {
+  wss.on('connection', async (ws, req) => {
+    const ip = req.headers['x-forwarded-for']?.split(',')[0].trim() || req.socket.remoteAddress || 'unknown';
+    if (!wsRateCheck(ip)) {
+      ws.close(1008, 'Too many connections');
+      return;
+    }
     const clientId = crypto.randomUUID();
     const tmpDir = os.tmpdir();
 

@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CompileAny — Code in Any Language, Instantly</title>
+<meta property="og:title" content="CompileAny — Online Compiler for 18+ Languages"/>
+<meta name="description" content="A blazing-fast online compiler supporting 18+ languages with AI code generation, SQL sandbox, and HTML preview."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<script>
+(function(){var s=sessionStorage.getItem('themeMode'),d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(s?s!=='dark':!d)document.documentElement.classList.add('day')})();
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#080810;
+  --bg2:#0d0d18;
+  --bg3:#12121f;
+  --card:rgba(255,255,255,0.03);
+  --border:rgba(255,255,255,0.06);
+  --border2:rgba(255,255,255,0.1);
+  --text:#eeeef5;
+  --muted:#6b6b85;
+  --muted2:#9090a8;
+  --accent:#2563eb;
+  --accent2:#3b82f6;
+  --teal:#06b6d4;
+  --purple:#8b5cf6;
+  --green:#10b981;
+  --r:0.75rem;
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* ═══════════════════════ BACKGROUND ═══════════════════════ */
+.bg-canvas{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.18;animation:drift 20s ease-in-out infinite alternate}
+.orb1{width:700px;height:700px;top:-200px;left:-200px;background:radial-gradient(circle,#2563eb,transparent);animation-delay:0s}
+.orb2{width:500px;height:500px;top:30%;right:-150px;background:radial-gradient(circle,#8b5cf6,transparent);animation-delay:-7s;animation-duration:25s}
+.orb3{width:400px;height:400px;bottom:-100px;left:30%;background:radial-gradient(circle,#06b6d4,transparent);animation-delay:-14s;animation-duration:18s}
+@keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(60px,-40px) scale(1.1)}100%{transform:translate(-30px,60px) scale(0.95)}}
+
+.grid-overlay{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black,transparent)}
+
+/* ═══════════════════════ NAV ═══════════════════════ */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:rgba(8,8,16,.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);font-weight:700;font-size:1rem;letter-spacing:-.2px}
+.logo-mark{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;flex-shrink:0;box-shadow:0 0 18px rgba(37,99,235,.35)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-link{color:var(--muted2);text-decoration:none;font-size:.875rem;font-weight:500;transition:color .2s}
+.nav-link:hover{color:var(--text)}
+.btn-nav{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:.875rem;font-weight:600;cursor:pointer;text-decoration:none;transition:background .2s,transform .15s,box-shadow .2s;box-shadow:0 0 0 rgba(37,99,235,0)}
+.btn-nav:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 20px rgba(37,99,235,.4)}
+
+/* ═══════════════════════ HERO ═══════════════════════ */
+.hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8rem 1.5rem 4rem}
+
+.badge{display:inline-flex;align-items:center;gap:7px;background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.25);border-radius:100px;padding:5px 14px;font-size:.72rem;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--teal);margin-bottom:2rem}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);animation:pulse2 2s infinite}
+@keyframes pulse2{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+h1{font-size:clamp(2.6rem,7vw,5.2rem);font-weight:900;letter-spacing:-2.5px;line-height:1.05;margin-bottom:1.5rem;max-width:860px}
+.h1-line1{display:block;color:var(--text)}
+.h1-grad{background:linear-gradient(135deg,var(--accent2) 0%,var(--teal) 50%,var(--purple) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gradShift 6s ease infinite alternate;background-size:200%}
+@keyframes gradShift{0%{background-position:0% 50%}100%{background-position:100% 50%}}
+
+.hero-sub{font-size:clamp(1rem,2.5vw,1.2rem);color:var(--muted2);max-width:540px;margin:0 auto 2.5rem;line-height:1.8;font-weight:400}
+
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:4rem}
+.btn-primary{display:inline-flex;align-items:center;gap:9px;background:linear-gradient(135deg,var(--accent),var(--purple));color:#fff;border:none;border-radius:11px;padding:14px 30px;font-size:1rem;font-weight:600;cursor:pointer;text-decoration:none;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 30px rgba(37,99,235,.35)}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 10px 40px rgba(37,99,235,.5)}
+.btn-ghost{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.04);border:1px solid var(--border2);color:var(--text);border-radius:11px;padding:14px 30px;font-size:1rem;font-weight:500;cursor:pointer;text-decoration:none;transition:background .2s,border-color .2s}
+.btn-ghost:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
+
+/* ═══════════════════════ TERMINAL ═══════════════════════ */
+.terminal-wrap{position:relative;max-width:820px;width:100%;margin:0 auto}
+.terminal-glow{position:absolute;inset:-1px;border-radius:17px;background:linear-gradient(135deg,rgba(37,99,235,.4),rgba(139,92,246,.4),rgba(6,182,212,.4));z-index:-1;filter:blur(12px);opacity:.6}
+.terminal{border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.1);background:rgba(10,10,20,.9);backdrop-filter:blur(20px);text-align:left;box-shadow:0 32px 80px rgba(0,0,0,.6)}
+.t-bar{background:rgba(255,255,255,.04);padding:13px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.06)}
+.t-dot{width:12px;height:12px;border-radius:50%}
+.t-r{background:#ff5f57}.t-y{background:#febc2e}.t-g{background:#28c840}
+.t-tabs{display:flex;gap:2px;margin-left:12px}
+.t-tab{padding:4px 12px;border-radius:6px;font-size:.72rem;font-family:'JetBrains Mono',monospace;color:var(--muted);cursor:default;transition:background .15s,color .15s}
+.t-tab.active{background:rgba(255,255,255,.07);color:var(--text)}
+.t-body{padding:1.5rem 1.8rem;min-height:280px;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:2}
+.code-line{display:flex}
+.ln{color:#2a2a40;user-select:none;width:2em;margin-right:1.4em;text-align:right;flex-shrink:0;font-size:.75rem;padding-top:1px}
+.kw{color:#569cd6}.tp{color:#4ec9b0}.fn{color:#dcdcaa}.str{color:#ce9178}.cm{color:#4a5568}.num{color:#b5cea8}.op{color:#d4d4d4}.inc{color:#c586c0}.pun{color:#808080}
+.t-output{margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,.05)}
+.out-prompt{color:#28c840;font-size:.8rem}
+.out-text{color:var(--teal);font-size:.8rem}
+.cursor{display:inline-block;width:2px;height:14px;background:var(--teal);margin-left:2px;animation:blink 1s infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ═══════════════════════ STATS ═══════════════════════ */
+.stats-row{position:relative;z-index:1;display:flex;justify-content:center;flex-wrap:wrap;gap:0;max-width:900px;margin:6rem auto;border:1px solid var(--border);border-radius:20px;overflow:hidden;background:rgba(255,255,255,.01)}
+.stat{flex:1;min-width:140px;padding:2.2rem 1.5rem;text-align:center;border-right:1px solid var(--border);transition:background .2s}
+.stat:last-child{border-right:none}
+.stat:hover{background:rgba(255,255,255,.025)}
+.stat-n{font-size:2.4rem;font-weight:900;letter-spacing:-1px;line-height:1;margin-bottom:.35rem;background:linear-gradient(135deg,#fff,var(--muted2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-l{font-size:.78rem;color:var(--muted);font-weight:500;letter-spacing:.3px}
+
+/* ═══════════════════════ SECTIONS ═══════════════════════ */
+.section{position:relative;z-index:1;padding:5rem 1.5rem;max-width:1100px;margin:0 auto}
+.eyebrow{font-size:.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:.8rem}
+.section-h{font-size:clamp(1.9rem,4vw,2.9rem);font-weight:800;letter-spacing:-1px;line-height:1.15;margin-bottom:.9rem}
+.section-p{font-size:1.05rem;color:var(--muted2);line-height:1.75;max-width:500px}
+
+/* ═══════════════════════ LANGUAGE GRID ═══════════════════════ */
+.lang-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;margin-top:3rem}
+.lang-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem .8rem;text-align:center;text-decoration:none;display:block;transition:border-color .2s,background .2s,transform .2s,box-shadow .2s;position:relative;overflow:hidden}
+.lang-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--lc,#2563eb),transparent);opacity:0;transition:opacity .2s}
+.lang-card:hover{border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.05);transform:translateY(-4px);box-shadow:0 12px 30px rgba(0,0,0,.3)}
+.lang-card:hover::before{opacity:.07}
+.lang-icon{width:38px;height:38px;margin:0 auto .5rem;display:block;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.3))}
+.lang-icon-invert{filter:brightness(0) invert(1) opacity(.85) drop-shadow(0 2px 6px rgba(0,0,0,.3))}
+.lang-label{font-size:.72rem;font-weight:600;color:var(--muted2);display:block}
+
+/* ═══════════════════════ FEATURES ═══════════════════════ */
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-top:3rem}
+.feat-card{background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:16px;padding:1.8rem;transition:border-color .2s,background .2s,transform .2s;position:relative;overflow:hidden}
+.feat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);opacity:0;transition:opacity .3s}
+.feat-card:hover{border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.04);transform:translateY(-2px)}
+.feat-card:hover::after{opacity:1}
+.feat-icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:1.1rem;background:var(--fi-bg,rgba(37,99,235,.12));color:var(--fi-col,var(--accent2))}
+.feat-title{font-size:1rem;font-weight:700;margin-bottom:.4rem}
+.feat-desc{font-size:.875rem;color:var(--muted2);line-height:1.7}
+
+/* ═══════════════════════ CODE SHOWCASE ═══════════════════════ */
+.showcase{position:relative;z-index:1;padding:4rem 1.5rem;max-width:1100px;margin:0 auto}
+.showcase-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:3rem}
+.mini-editor{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:rgba(10,10,20,.8)}
+.mini-bar{background:rgba(255,255,255,.03);padding:9px 14px;display:flex;align-items:center;gap:6px;border-bottom:1px solid rgba(255,255,255,.05);font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted)}
+.mini-dot{width:8px;height:8px;border-radius:50%}
+.mini-name{margin-left:6px}
+.mini-body{padding:1.1rem 1.4rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;line-height:1.85;min-height:120px}
+
+/* ═══════════════════════ CTA ═══════════════════════ */
+.cta-wrap{position:relative;z-index:1;padding:3rem 1.5rem 7rem;text-align:center}
+.cta-box{max-width:700px;margin:0 auto;position:relative}
+.cta-glow{position:absolute;inset:-2px;border-radius:26px;background:linear-gradient(135deg,rgba(37,99,235,.3),rgba(139,92,246,.3),rgba(6,182,212,.3));filter:blur(20px);z-index:-1;opacity:.6}
+.cta-inner{background:rgba(13,13,24,.9);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:4rem 2.5rem;backdrop-filter:blur(20px)}
+.cta-inner h2{font-size:clamp(1.7rem,4vw,2.4rem);font-weight:800;letter-spacing:-1px;margin-bottom:.8rem}
+.cta-inner p{color:var(--muted2);margin-bottom:2rem;font-size:1.05rem;line-height:1.75}
+
+/* ═══════════════════════ FOOTER ═══════════════════════ */
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2rem 1.5rem;text-align:center;color:var(--muted);font-size:.8rem}
+footer a{color:var(--muted2);text-decoration:none;transition:color .15s}
+footer a:hover{color:var(--text)}
+
+/* ═══════════════════════ ANIMATIONS ═══════════════════════ */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+.reveal-d1{transition-delay:.08s}
+.reveal-d2{transition-delay:.16s}
+.reveal-d3{transition-delay:.24s}
+
+/* ═══════════════════════ DAY MODE ═══════════════════════ */
+.day{
+  --bg:#f0f2f5;
+  --bg2:#ffffff;
+  --bg3:#f4f6f9;
+  --card:rgba(255,255,255,0.9);
+  --border:rgba(0,0,0,0.07);
+  --border2:rgba(0,0,0,0.12);
+  --text:#0f1117;
+  --muted:#8892a0;
+  --muted2:#4b5563;
+}
+
+.day body{background:var(--bg)}
+
+.day .orb{opacity:.09}
+
+.day .grid-overlay{background-image:linear-gradient(rgba(0,0,0,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.04) 1px,transparent 1px)}
+
+.day nav{background:rgba(240,242,245,.9);border-bottom:1px solid var(--border2)}
+.day .nav-link:hover{color:var(--text)}
+
+.day .badge{background:rgba(37,99,235,.08);border-color:rgba(37,99,235,.2);color:#2563eb}
+.day .badge-dot{background:#2563eb}
+
+.day .h1-line1{color:var(--text)}
+
+.day .btn-ghost{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.12);color:var(--text)}
+.day .btn-ghost:hover{background:rgba(0,0,0,.08);border-color:rgba(0,0,0,.18)}
+
+/* keep terminal dark in day mode — it's a code environment */
+.day .terminal{background:rgba(13,13,24,.95);border-color:rgba(0,0,0,.2)}
+.day .terminal-glow{opacity:.35}
+
+.day .stats-row{background:var(--bg2);border-color:var(--border2)}
+.day .stat{border-right-color:var(--border2)}
+.day .stat:hover{background:rgba(37,99,235,.04)}
+.day .stat-n{background:linear-gradient(135deg,#0f1117,var(--muted2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.day .stat-l{color:var(--muted)}
+
+.day .lang-card{background:var(--bg2);border-color:var(--border2)}
+.day .lang-card:hover{background:#f0f4ff;border-color:rgba(37,99,235,.3);box-shadow:0 8px 24px rgba(37,99,235,.1)}
+.day .lang-label{color:var(--muted2)}
+/* Rust/Bash logos are black — no invert needed in day mode */
+.day .lang-icon-invert{filter:opacity(.75)}
+
+.day .feat-card{background:var(--bg2);border-color:var(--border2)}
+.day .feat-card:hover{background:#f4f6ff;border-color:rgba(37,99,235,.2)}
+.day .feat-card::after{background:linear-gradient(90deg,transparent,rgba(37,99,235,.06),transparent)}
+.day .feat-title{color:var(--text)}
+.day .feat-desc{color:var(--muted2)}
+
+.day .mini-editor{background:var(--bg2);border-color:var(--border2)}
+.day .mini-bar{background:var(--bg3);border-bottom-color:var(--border2);color:var(--muted)}
+
+.day .cta-inner{background:var(--bg2);border-color:var(--border2)}
+.day .cta-glow{opacity:.3}
+
+.day footer{border-top-color:var(--border2)}
+.day footer a:hover{color:var(--text)}
+
+/* Theme toggle button */
+.theme-toggle{width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:#c8c8d8;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.9rem;transition:background .2s,color .2s,border-color .2s,transform .15s;flex-shrink:0}
+.theme-toggle:hover{background:rgba(37,99,235,.25);border-color:rgba(59,130,246,.5);color:#fff}
+.theme-toggle:active{transform:scale(.88)}
+.day .theme-toggle{border-color:rgba(0,0,0,.15);background:rgba(0,0,0,.06);color:#374151}
+.day .theme-toggle:hover{background:rgba(37,99,235,.12);border-color:rgba(37,99,235,.35);color:#2563eb}
+
+/* ═══════════════════════ RESPONSIVE ═══════════════════════ */
+@media(max-width:700px){
+  .showcase-grid{grid-template-columns:1fr}
+  .stat{border-right:none;border-bottom:1px solid var(--border)}
+  .stat:last-child{border-bottom:none}
+  nav{padding:0 1rem}
+  .t-tabs{display:none}
+}
+@media(max-width:425px){
+  .logo-mark{width:30px;height:30px;font-size:12px;border-radius:8px}
+  .logo{font-size:.9rem;gap:10px}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-canvas">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+<div class="grid-overlay"></div>
+
+<!-- ── NAV ── -->
+<nav>
+  <a class="logo" href="/">
+    <div class="logo-mark"><i class="fas fa-code"></i></div>
+    CompileAny
+  </a>
+  <div class="nav-right">
+    <a class="nav-link" href="#languages">Languages</a>
+    <a class="nav-link" href="#features">Features</a>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle light/dark mode" aria-label="Toggle light/dark mode">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+    <a class="btn-nav" href="/cpp-programming"><i class="fas fa-play" style="font-size:.75rem"></i> Start Coding</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="badge"><span class="badge-dot"></span> 18 Languages · AI Powered · Zero Setup</div>
+
+  <h1>
+    <span class="h1-line1">Write Code.</span>
+    <span class="h1-grad">Run Instantly.</span>
+  </h1>
+
+  <p class="hero-sub">A professional online compiler with real-time execution, AI code generation, SQL sandbox, and HTML live preview — all in your browser.</p>
+
+  <div class="hero-btns">
+    <a class="btn-primary" href="/cpp-programming">
+      <i class="fas fa-play"></i> Open Compiler
+    </a>
+    <a class="btn-ghost" href="#languages">
+      <i class="fas fa-layer-group"></i> View Languages
+    </a>
+  </div>
+
+  <!-- Terminal -->
+  <div class="terminal-wrap reveal">
+    <div class="terminal-glow"></div>
+    <div class="terminal">
+      <div class="t-bar">
+        <div class="t-dot t-r"></div><div class="t-dot t-y"></div><div class="t-dot t-g"></div>
+        <div class="t-tabs">
+          <div class="t-tab active">main.cpp</div>
+          <div class="t-tab">main.py</div>
+          <div class="t-tab">main.js</div>
+        </div>
+      </div>
+      <div class="t-body" id="code-display">
+        <div class="code-line"><span class="ln">1</span><span class="inc">#include</span>&nbsp;<span class="str">&lt;iostream&gt;</span></div>
+        <div class="code-line"><span class="ln">2</span><span class="kw">using namespace</span>&nbsp;<span class="tp">std</span><span class="pun">;</span></div>
+        <div class="code-line"><span class="ln">3</span>&nbsp;</div>
+        <div class="code-line"><span class="ln">4</span><span class="tp">int</span>&nbsp;<span class="fn">main</span><span class="pun">() {</span></div>
+        <div class="code-line"><span class="ln">5</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tp">cout</span>&nbsp;<span class="pun">&lt;&lt;</span>&nbsp;<span class="str">"Enter name: "</span><span class="pun">;</span></div>
+        <div class="code-line"><span class="ln">6</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tp">string</span>&nbsp;name<span class="pun">;</span>&nbsp;<span class="tp">cin</span>&nbsp;<span class="pun">&gt;&gt;</span>&nbsp;name<span class="pun">;</span></div>
+        <div class="code-line"><span class="ln">7</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tp">cout</span>&nbsp;<span class="pun">&lt;&lt;</span>&nbsp;<span class="str">"Hello, "</span>&nbsp;<span class="pun">&lt;&lt;</span>&nbsp;name&nbsp;<span class="pun">&lt;&lt;</span>&nbsp;<span class="str">"!\n"</span><span class="pun">;</span></div>
+        <div class="code-line"><span class="ln">8</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span>&nbsp;<span class="num">0</span><span class="pun">;</span></div>
+        <div class="code-line"><span class="ln">9</span><span class="pun">}</span></div>
+        <div class="t-output">
+          <div><span class="out-prompt">$ </span><span style="color:var(--muted)">./main</span></div>
+          <div><span class="out-prompt">  </span><span class="out-text">Enter name: </span><span style="color:#fff">Abhishek</span></div>
+          <div><span class="out-prompt">  </span><span class="out-text">Hello, Abhishek!</span><span class="cursor"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── STATS ── -->
+<div class="stats-row reveal" style="padding:0 1.5rem">
+  <div class="stat"><div class="stat-n" data-count="18">0</div><div class="stat-l">Languages</div></div>
+  <div class="stat"><div class="stat-n">AI</div><div class="stat-l">Code Generator</div></div>
+  <div class="stat"><div class="stat-n">30s</div><div class="stat-l">Max Runtime</div></div>
+  <div class="stat"><div class="stat-n">0</div><div class="stat-l">Setup Needed</div></div>
+</div>
+
+<!-- ── LANGUAGES ── -->
+<section class="section" id="languages">
+  <div class="eyebrow reveal">Languages</div>
+  <div class="section-h reveal reveal-d1">Every Language You Need</div>
+  <p class="section-p reveal reveal-d2">From systems programming to web dev, data science to scripting — run anything without installing a thing.</p>
+
+  <div class="lang-grid">
+    <a class="lang-card reveal" href="/cpp-programming" style="--lc:#00599C">
+      <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg" alt="C++" loading="lazy"/>
+      <span class="lang-label">C++</span>
+    </a>
+    <a class="lang-card reveal" href="/c-programming" style="--lc:#A8B9CC">
+      <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg" alt="C" loading="lazy"/>
+      <span class="lang-label">C</span>
+    </a>
+    <a class="lang-card reveal" href="/java-programming" style="--lc:#f89820">
+      <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" alt="Java" loading="lazy"/>
+      <span class="lang-label">Java</span>
+    </a>
+    <a class="lang-card reveal" href="/python-programming" style="--lc:#3776AB">
+      <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python" loading="lazy"/>
+      <span class="lang-label">Python</span>
+    </a>
+    <a class="lang-card reveal" href="/javascript-programming" style="--lc:#F7DF1E">
+      <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" alt="JavaScript" loading="lazy"/>
+      <span class="lang-label">JavaScript</span>
+    </a>
+    <a class="lang-card reveal" href="/typescript-programming" style="--lc:#3178C6">
+      <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" alt="TypeScript" loading="lazy"/>
+      <span class="lang-label">TypeScript</span>
+    </a>
+    <a class="lang-card reveal" href="/go-programming" style="--lc:#00ACD7">
+      <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original.svg" alt="Go" loading="lazy"/>
+      <span class="lang-label">Go</span>
+    </a>
+    <a class="lang-card reveal" href="/rust-programming" style="--lc:#CE422B">
+      <img class="lang-icon lang-icon-invert" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/rust/rust-original.svg" alt="Rust" loading="lazy"/>
+      <span class="lang-label">Rust</span>
+    </a>
+    <a class="lang-card reveal" href="/kotlin-programming" style="--lc:#7F52FF">
+      <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kotlin/kotlin-original.svg" alt="Kotlin" loading="lazy"/>
+      <span class="lang-label">Kotlin</span>
+    </a>
+    <a class="lang-card reveal" href="/ruby-programming" style="--lc:#CC342D">
+      <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/ruby/ruby-original.svg" alt="Ruby" loading="lazy"/>
+      <span class="lang-label">Ruby</span>
+    </a>
+    <a class="lang-card reveal" href="/php-programming" style="--lc:#777BB4">
+      <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg" alt="PHP" loading="lazy"/>
+      <span class="lang-label">PHP</span>
+    </a>
+    <a class="lang-card reveal" href="/bash-programming" style="--lc:#4EAA25">
+      <img class="lang-icon lang-icon-invert" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bash/bash-original.svg" alt="Bash" loading="lazy"/>
+      <span class="lang-label">Bash</span>
+    </a>
+    <a class="lang-card reveal" href="/csharp-programming" style="--lc:#239120">
+      <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" alt="C#" loading="lazy"/>
+      <span class="lang-label">C#</span>
+    </a>
+    <a class="lang-card reveal" href="/perl-programming" style="--lc:#39457E">
+      <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/perl/perl-original.svg" alt="Perl" loading="lazy"/>
+      <span class="lang-label">Perl</span>
+    </a>
+    <a class="lang-card reveal" href="/lua-programming" style="--lc:#2C2D72">
+      <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/lua/lua-original.svg" alt="Lua" loading="lazy"/>
+      <span class="lang-label">Lua</span>
+    </a>
+    <a class="lang-card reveal" href="/r-programming" style="--lc:#276DC3">
+      <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/r/r-original.svg" alt="R" loading="lazy"/>
+      <span class="lang-label">R</span>
+    </a>
+    <a class="lang-card reveal" href="/html" style="--lc:#E34F26">
+      <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" alt="HTML" loading="lazy"/>
+      <span class="lang-label">HTML</span>
+    </a>
+    <a class="lang-card reveal" href="/sql-programming" style="--lc:#00758F">
+      <img class="lang-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" alt="SQL" loading="lazy"/>
+      <span class="lang-label">SQL</span>
+    </a>
+  </div>
+</section>
+
+<!-- ── FEATURES ── -->
+<section class="section" id="features">
+  <div class="eyebrow reveal">Features</div>
+  <div class="section-h reveal reveal-d1">A Complete Coding Environment</div>
+  <p class="section-p reveal reveal-d2">Everything you need — nothing you don't.</p>
+
+  <div class="feat-grid">
+    <div class="feat-card reveal" style="--fi-bg:rgba(37,99,235,.1);--fi-col:#3b82f6">
+      <div class="feat-icon"><i class="fas fa-terminal"></i></div>
+      <div class="feat-title">Real-Time Terminal</div>
+      <div class="feat-desc">Full stdin/stdout support. Your code runs in an isolated container and outputs stream live to a real xterm.js terminal.</div>
+    </div>
+    <div class="feat-card reveal reveal-d1" style="--fi-bg:rgba(139,92,246,.1);--fi-col:#8b5cf6">
+      <div class="feat-icon"><i class="fas fa-wand-magic-sparkles"></i></div>
+      <div class="feat-title">AI Code Generation</div>
+      <div class="feat-desc">Describe your program in plain English. AI writes production-ready code for any of the 18 supported languages in seconds.</div>
+    </div>
+    <div class="feat-card reveal reveal-d2" style="--fi-bg:rgba(6,182,212,.1);--fi-col:#06b6d4">
+      <div class="feat-icon"><i class="fas fa-database"></i></div>
+      <div class="feat-title">SQL Sandbox</div>
+      <div class="feat-desc">Write and execute MySQL queries against a live database. Results render as a clean, styled table — not raw text.</div>
+    </div>
+    <div class="feat-card reveal" style="--fi-bg:rgba(249,115,22,.1);--fi-col:#f97316">
+      <div class="feat-icon"><i class="fas fa-globe"></i></div>
+      <div class="feat-title">HTML Live Preview</div>
+      <div class="feat-desc">Write HTML, CSS, and JS and see a real preview instantly rendered in a sandboxed iframe — no browser extension needed.</div>
+    </div>
+    <div class="feat-card reveal reveal-d1" style="--fi-bg:rgba(16,185,129,.1);--fi-col:#10b981">
+      <div class="feat-icon"><i class="fas fa-share-nodes"></i></div>
+      <div class="feat-title">Share & Collaborate</div>
+      <div class="feat-desc">Generate a permanent short link or QR code to share your code with anyone, anywhere. Zero sign-up required.</div>
+    </div>
+    <div class="feat-card reveal reveal-d2" style="--fi-bg:rgba(239,68,68,.1);--fi-col:#ef4444">
+      <div class="feat-icon"><i class="fas fa-bug"></i></div>
+      <div class="feat-title">AI Error Fixer</div>
+      <div class="feat-desc">When compilation fails, one click sends your code and the error to AI. It rewrites the fix and loads it — ready to run again.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MINI CODE SHOWCASE ── -->
+<div class="showcase">
+  <div class="eyebrow reveal">Polyglot</div>
+  <div class="section-h reveal reveal-d1">Same Problem, Any Language</div>
+  <p class="section-p reveal reveal-d2">Switch between languages instantly — your code session is always ready.</p>
+
+  <div class="showcase-grid">
+    <div class="mini-editor reveal">
+      <div class="mini-bar"><div class="mini-dot" style="background:#28c840"></div><span class="mini-name">main.py</span></div>
+      <div class="mini-body">
+        <div><span class="kw">def</span> <span class="fn">fibonacci</span><span class="pun">(n):</span></div>
+        <div>&nbsp;&nbsp;<span class="kw">if</span> n <span class="pun">&lt;=</span> <span class="num">1</span><span class="pun">:</span> <span class="kw">return</span> n</div>
+        <div>&nbsp;&nbsp;<span class="kw">return</span> <span class="fn">fibonacci</span><span class="pun">(n-</span><span class="num">1</span><span class="pun">) +</span> <span class="fn">fibonacci</span><span class="pun">(n-</span><span class="num">2</span><span class="pun">)</span></div>
+        <div>&nbsp;</div>
+        <div><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span><span class="pun">(</span><span class="num">10</span><span class="pun">):</span></div>
+        <div>&nbsp;&nbsp;<span class="fn">print</span><span class="pun">(</span><span class="fn">fibonacci</span><span class="pun">(i),</span> end<span class="pun">=</span><span class="str">' '</span><span class="pun">)</span></div>
+        <div style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid rgba(255,255,255,.05)"><span style="color:#28c840">$</span> <span class="out-text">0 1 1 2 3 5 8 13 21 34</span></div>
+      </div>
+    </div>
+    <div class="mini-editor reveal reveal-d1">
+      <div class="mini-bar"><div class="mini-dot" style="background:#f59e0b"></div><span class="mini-name">Main.java</span></div>
+      <div class="mini-body">
+        <div><span class="kw">public class</span> <span class="tp">Main</span> <span class="pun">{</span></div>
+        <div>&nbsp;&nbsp;<span class="kw">static int</span> <span class="fn">fib</span><span class="pun">(</span><span class="kw">int</span> n<span class="pun">) {</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">if</span> <span class="pun">(n &lt;= 1)</span> <span class="kw">return</span> n<span class="pun">;</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> <span class="fn">fib</span><span class="pun">(n-1) +</span> <span class="fn">fib</span><span class="pun">(n-2);</span></div>
+        <div>&nbsp;&nbsp;<span class="pun">}</span></div>
+        <div>&nbsp;&nbsp;<span class="kw">public static void</span> <span class="fn">main</span><span class="pun">(</span><span class="tp">String</span><span class="pun">[] args) {</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">for</span> <span class="pun">(</span><span class="kw">int</span> i<span class="pun">=0;</span>i<span class="pun">&lt;10;</span>i<span class="pun">++)</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tp">System</span><span class="pun">.</span>out<span class="pun">.</span><span class="fn">print</span><span class="pun">(</span><span class="fn">fib</span><span class="pun">(i) +</span> <span class="str">" "</span><span class="pun">);</span></div>
+        <div style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid rgba(255,255,255,.05)"><span style="color:#28c840">$</span> <span class="out-text">0 1 1 2 3 5 8 13 21 34</span></div>
+      </div>
+    </div>
+    <div class="mini-editor reveal">
+      <div class="mini-bar"><div class="mini-dot" style="background:#3b82f6"></div><span class="mini-name">main.rs</span></div>
+      <div class="mini-body">
+        <div><span class="kw">fn</span> <span class="fn">fib</span><span class="pun">(</span>n<span class="pun">:</span> <span class="tp">u64</span><span class="pun">) -></span> <span class="tp">u64</span> <span class="pun">{</span></div>
+        <div>&nbsp;&nbsp;<span class="kw">match</span> n <span class="pun">{</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="num">0</span><span class="pun"> |</span> <span class="num">1</span> <span class="pun">=></span> n<span class="pun">,</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="pun">_ =></span> <span class="fn">fib</span><span class="pun">(n-1) +</span> <span class="fn">fib</span><span class="pun">(n-2),</span></div>
+        <div>&nbsp;&nbsp;<span class="pun">}</span></div>
+        <div><span class="pun">}</span></div>
+        <div><span class="kw">fn</span> <span class="fn">main</span><span class="pun">() {</span></div>
+        <div>&nbsp;&nbsp;<span class="pun">(0..10).</span><span class="fn">for_each</span><span class="pun">(|i|</span> <span class="fn">print!</span><span class="pun">(</span><span class="str">"{} "</span><span class="pun">,</span><span class="fn">fib</span><span class="pun">(i)));</span></div>
+        <div style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid rgba(255,255,255,.05)"><span style="color:#28c840">$</span> <span class="out-text">0 1 1 2 3 5 8 13 21 34</span></div>
+      </div>
+    </div>
+    <div class="mini-editor reveal reveal-d1">
+      <div class="mini-bar"><div class="mini-dot" style="background:#06b6d4"></div><span class="mini-name">main.sql</span></div>
+      <div class="mini-body">
+        <div><span class="kw">CREATE TABLE</span> <span class="fn">users</span> <span class="pun">(</span></div>
+        <div>&nbsp;&nbsp;id <span class="tp">INT AUTO_INCREMENT</span> <span class="kw">PRIMARY KEY</span><span class="pun">,</span></div>
+        <div>&nbsp;&nbsp;name <span class="tp">VARCHAR(50)</span><span class="pun">,</span></div>
+        <div>&nbsp;&nbsp;score <span class="tp">INT</span></div>
+        <div><span class="pun">);</span></div>
+        <div><span class="kw">INSERT INTO</span> users <span class="pun">(name, score)</span> <span class="kw">VALUES</span></div>
+        <div>&nbsp;&nbsp;<span class="pun">(</span><span class="str">'Alice'</span><span class="pun">,</span> <span class="num">95</span><span class="pun">),(</span><span class="str">'Bob'</span><span class="pun">,</span> <span class="num">87</span><span class="pun">);</span></div>
+        <div><span class="kw">SELECT</span> <span class="pun">*</span> <span class="kw">FROM</span> users <span class="kw">ORDER BY</span> score <span class="kw">DESC</span><span class="pun">;</span></div>
+        <div style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid rgba(255,255,255,.05)"><span style="color:#06b6d4">┌ Alice 95 │ Bob 87 ┐</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CTA ── -->
+<div class="cta-wrap">
+  <div class="cta-box reveal">
+    <div class="cta-glow"></div>
+    <div class="cta-inner">
+      <h2>Ready to start building?</h2>
+      <p>No account. No installation. Pick a language and your first line of code runs in under a second.</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <a class="btn-primary" href="/cpp-programming" style="font-size:1.05rem;padding:15px 36px">
+          <i class="fas fa-play"></i> Open the Compiler
+        </a>
+        <a class="btn-ghost" href="/python-programming">
+          <i class="fab fa-python"></i> Try Python
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p style="margin-bottom:.4rem">CompileAny &mdash; Professional Online IDE</p>
+  <p>
+    <a href="/cpp-programming">C++</a> &middot;
+    <a href="/python-programming">Python</a> &middot;
+    <a href="/javascript-programming">JavaScript</a> &middot;
+    <a href="/java-programming">Java</a> &middot;
+    <a href="/go-programming">Go</a> &middot;
+    <a href="/rust-programming">Rust</a> &middot;
+    <a href="/sql-programming">SQL</a>
+    <span style="margin-left:6px;color:var(--muted)">and 11 more</span>
+  </p>
+</footer>
+
+<script>
+// Theme init — reads same sessionStorage key as the compiler app
+(function(){
+  const saved = sessionStorage.getItem('themeMode');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const isDark = saved ? saved === 'dark' : prefersDark;
+  if (!isDark) document.documentElement.classList.add('day');
+  const icon = document.getElementById('theme-icon');
+  if (icon) icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+})();
+
+document.getElementById('theme-toggle').addEventListener('click', function(){
+  const isDay = document.documentElement.classList.toggle('day');
+  sessionStorage.setItem('themeMode', isDay ? 'day' : 'dark');
+  document.getElementById('theme-icon').className = isDay ? 'fas fa-sun' : 'fas fa-moon';
+});
+
+// Intersection observer for scroll reveals
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// Counter animation for stat numbers
+const counters = document.querySelectorAll('[data-count]');
+const cio = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target;
+    const target = parseInt(el.dataset.count);
+    let start = 0;
+    const step = target / 40;
+    const t = setInterval(() => {
+      start = Math.min(start + step, target);
+      el.textContent = Math.round(start) + '+';
+      if (start >= target) clearInterval(t);
+    }, 30);
+    cio.unobserve(el);
+  });
+}, { threshold: 0.5 });
+counters.forEach(c => cio.observe(c));
+
+// Tab switcher in hero terminal
+const tabs = document.querySelectorAll('.t-tab');
+const snippets = [
+  // C++ (already shown)
+  null,
+  // Python
+  `<div class="code-line"><span class="ln">1</span><span class="kw">def</span>&nbsp;<span class="fn">greet</span><span class="pun">(name):</span></div>
+   <div class="code-line"><span class="ln">2</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span>&nbsp;<span class="str">f"Hello, {name}!"</span></div>
+   <div class="code-line"><span class="ln">3</span>&nbsp;</div>
+   <div class="code-line"><span class="ln">4</span>name&nbsp;<span class="pun">=</span>&nbsp;<span class="fn">input</span><span class="pun">(</span><span class="str">"Enter name: "</span><span class="pun">)</span></div>
+   <div class="code-line"><span class="ln">5</span><span class="fn">print</span><span class="pun">(</span><span class="fn">greet</span><span class="pun">(name))</span></div>
+   <div class="t-output"><div><span class="out-prompt">$ </span><span style="color:var(--muted)">python3 main.py</span></div><div><span class="out-text">Enter name: </span><span style="color:#fff">Abhishek</span></div><div><span class="out-text">Hello, Abhishek!</span><span class="cursor"></span></div></div>`,
+  // JS
+  `<div class="code-line"><span class="ln">1</span><span class="kw">const</span>&nbsp;<span class="fn">greet</span>&nbsp;<span class="pun">=</span>&nbsp;<span class="pun">(name)</span>&nbsp;<span class="pun">=></span>&nbsp;<span class="str">\`Hello, \${name}!\`</span><span class="pun">;</span></div>
+   <div class="code-line"><span class="ln">2</span>&nbsp;</div>
+   <div class="code-line"><span class="ln">3</span><span class="kw">const</span>&nbsp;readline&nbsp;<span class="pun">=</span>&nbsp;<span class="fn">require</span><span class="pun">(</span><span class="str">'readline'</span><span class="pun">).</span><span class="fn">createInterface</span><span class="pun">({</span></div>
+   <div class="code-line"><span class="ln">4</span>&nbsp;&nbsp;input<span class="pun">:</span>&nbsp;process.stdin&nbsp;<span class="pun">});</span></div>
+   <div class="code-line"><span class="ln">5</span>readline.<span class="fn">on</span><span class="pun">(</span><span class="str">'line'</span><span class="pun">,</span>&nbsp;name&nbsp;<span class="pun">=></span>&nbsp;<span class="fn">console</span><span class="pun">.</span><span class="fn">log</span><span class="pun">(</span><span class="fn">greet</span><span class="pun">(name)));</span></div>
+   <div class="t-output"><div><span class="out-prompt">$ </span><span style="color:var(--muted)">node main.js</span></div><div><span class="out-text">Hello, Abhishek!</span><span class="cursor"></span></div></div>`
+];
+
+const originalHTML = document.querySelector('.t-body').innerHTML;
+
+tabs.forEach((tab, i) => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const body = document.querySelector('.t-body');
+    if (i === 0) { body.innerHTML = originalHTML; return; }
+    body.innerHTML = snippets[i];
+  });
+});
+</script>
+</body>
+</html>

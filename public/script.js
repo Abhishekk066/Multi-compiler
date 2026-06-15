@@ -1,3 +1,11 @@
+// Fetch polyfill source once at startup so it can be inlined into blob iframes
+// without depending on cross-origin <script src> loading (which has timing issues).
+let _polySrc = "";
+fetch("/poly-storage.js")
+  .then(function (r) { return r.text(); })
+  .then(function (t) { _polySrc = t; })
+  .catch(function () {});
+
 async function init() {
   const webSocketType =
     window.location.protocol === "https:"
@@ -394,7 +402,7 @@ async function init() {
 
   const pathParts = window.location.pathname.split("/");
   const routeLang = pathParts[1]
-    ? pathParts[1].replace("-programming", "")
+    ? pathParts[1].replace(/-online-compiler$/, "").replace(/-programming$/, "")
     : "";
   let currentLanguage = LANG_CONFIG[routeLang] ? routeLang : "cpp";
 
@@ -404,7 +412,11 @@ async function init() {
     window.location.pathname.startsWith("/share/");
 
   if (!isShareRoute) {
-    history.replaceState(null, "", currentLanguage === "html" ? "/html" : `/${currentLanguage}-programming`);
+    history.replaceState(
+      null,
+      "",
+      currentLanguage === "html" ? "/html" : `/${currentLanguage}-online-compiler`,
+    );
   } else {
     // Clean trailing slash for share URLs
     if (window.location.href.endsWith("/")) {
@@ -428,7 +440,7 @@ async function init() {
 
       li.addEventListener("click", () => {
         if (currentLanguage === key) return;
-        window.location.href = key === "html" ? "/html" : `/${key}-programming`;
+        window.location.href = key === "html" ? "/html" : `/${key}-online-compiler`;
       });
       sidebarList.appendChild(li);
     });
@@ -471,7 +483,16 @@ async function init() {
   function showHtmlPreview(htmlCode) {
     const preview = document.getElementById("html-preview");
     if (!preview) return;
-    const blob = new Blob([htmlCode], { type: "text/html" });
+    // Inline the polyfill so it runs synchronously before any user scripts.
+    // Using <script src> in a blob iframe can have cross-origin timing issues.
+    // _polySrc is fetched at startup from /poly-storage.js (never obfuscated).
+    const polyTag = _polySrc
+      ? `<script>${_polySrc}<\/script>`
+      : `<script src="${window.location.origin}/poly-storage.js"><\/script>`;
+    const injected = /<head(\s[^>]*)?>/i.test(htmlCode)
+      ? htmlCode.replace(/(<head(\s[^>]*)?>)/i, "$1" + polyTag)
+      : polyTag + htmlCode;
+    const blob = new Blob([injected], { type: "text/html" });
     const url = URL.createObjectURL(blob);
     if (preview._lastUrl) URL.revokeObjectURL(preview._lastUrl);
     preview._lastUrl = url;
@@ -505,16 +526,30 @@ async function init() {
         const table = { headers: [], rows: [] };
         i++;
         if (i < lines.length && lines[i].trim().startsWith("|")) {
-          table.headers = lines[i].trim().slice(1, -1).split("|").map((c) => c.trim());
+          table.headers = lines[i]
+            .trim()
+            .slice(1, -1)
+            .split("|")
+            .map((c) => c.trim());
           i++;
         }
         if (i < lines.length && /^\+[-+]+\+$/.test(lines[i].trim())) i++;
         while (i < lines.length && lines[i].trim().startsWith("|")) {
-          table.rows.push(lines[i].trim().slice(1, -1).split("|").map((c) => c.trim()));
+          table.rows.push(
+            lines[i]
+              .trim()
+              .slice(1, -1)
+              .split("|")
+              .map((c) => c.trim()),
+          );
           i++;
         }
         if (i < lines.length && /^\+[-+]+\+$/.test(lines[i].trim())) i++;
-        blocks.push({ type: "table", headers: table.headers, rows: table.rows });
+        blocks.push({
+          type: "table",
+          headers: table.headers,
+          rows: table.rows,
+        });
       } else if (trimmed) {
         blocks.push({ type: "message", text: trimmed });
         i++;
@@ -531,7 +566,8 @@ async function init() {
     container.innerHTML = "";
     const blocks = parseMySQLOutput(rawOutput);
     if (!blocks.length) {
-      container.innerHTML = '<p class="sql-message">Query executed. No output.</p>';
+      container.innerHTML =
+        '<p class="sql-message">Query executed. No output.</p>';
     } else {
       for (const block of blocks) {
         if (block.type === "table") {
@@ -572,7 +608,9 @@ async function init() {
           container.appendChild(wrapper);
         } else {
           const p = document.createElement("p");
-          p.className = block.text.startsWith("ERROR") ? "sql-error" : "sql-message";
+          p.className = block.text.startsWith("ERROR")
+            ? "sql-error"
+            : "sql-message";
           p.textContent = block.text;
           container.appendChild(p);
         }
@@ -602,6 +640,9 @@ async function init() {
     const subtitle = document.getElementById("ai-write-subtitle");
     if (subtitle)
       subtitle.textContent = `Describe the ${cfg.label} program you want to create`;
+    const brandSub = document.getElementById("brand-lang-subtitle");
+    if (brandSub) brandSub.textContent = cfg.label + " Online Compiler";
+    document.title = cfg.label + " Online Compiler — CompileAny";
     if (langKey === "html") {
       const fixBtn = document.getElementById("ai-fix-btn");
       if (fixBtn) fixBtn.style.display = "none";
@@ -689,7 +730,9 @@ async function init() {
   async function encryptText(text) {
     if (!hasSubtleCrypto) {
       // Insecure context fallback: encode only
-      return "b64:" + btoa(String.fromCharCode(...new TextEncoder().encode(text)));
+      return (
+        "b64:" + btoa(String.fromCharCode(...new TextEncoder().encode(text)))
+      );
     }
     const key = await getSessionKey();
     const iv = crypto.getRandomValues(new Uint8Array(12));
@@ -709,7 +752,9 @@ async function init() {
   async function decryptText(payload) {
     try {
       if (payload.startsWith("b64:")) {
-        return new TextDecoder().decode(Uint8Array.from(atob(payload.slice(4)), (c) => c.charCodeAt(0)));
+        return new TextDecoder().decode(
+          Uint8Array.from(atob(payload.slice(4)), (c) => c.charCodeAt(0)),
+        );
       }
       if (!payload.startsWith("enc:") || !hasSubtleCrypto) return null;
       const key = await getSessionKey();
@@ -1011,7 +1056,8 @@ async function init() {
         sqlOutputBuffer = "";
         const container = document.getElementById("sql-results");
         if (container) {
-          container.innerHTML = '<p class="sql-message sql-loading">Running query…</p>';
+          container.innerHTML =
+            '<p class="sql-message sql-loading">Running query…</p>';
           outputElement.style.display = "none";
           container.style.display = "block";
         }
@@ -1076,7 +1122,8 @@ async function init() {
       term.options.cursorBlink = false;
       if (isSql) {
         renderSqlResults(sqlOutputBuffer);
-        document.getElementById("execution-time").textContent = data.timer + "s";
+        document.getElementById("execution-time").textContent =
+          data.timer + "s";
         if (data.exitCode !== 0 && lastCompileError && aiFixBtn) {
           aiFixBtn.style.display = "flex";
         }
@@ -1086,7 +1133,8 @@ async function init() {
             ? `\r\n\x1b[34mExecution time: ${data.timer}s\x1b[0m\r\n\x1b[90m=== Code Execution Successful ===\x1b[0m`
             : `\r\n\x1b[34mExecution time: ${data.timer}s\x1b[0m\r\n\x1b[90m=== Code Exited With Errors ===\x1b[0m`;
         writeTerminal("\r\n" + outputMsg + "\r\n");
-        document.getElementById("execution-time").textContent = data.timer + "s";
+        document.getElementById("execution-time").textContent =
+          data.timer + "s";
         if (data.exitCode !== 0 && lastCompileError && aiFixBtn) {
           aiFixBtn.style.display = "flex";
         }
@@ -1317,7 +1365,9 @@ async function init() {
           try {
             const text = await readClipboardText();
             // Strip line breaks so paste never auto-submits input
-            const sanitized = (text || "").replace(/(\r\n|\r|\n)+/g, " ").trim();
+            const sanitized = (text || "")
+              .replace(/(\r\n|\r|\n)+/g, " ")
+              .trim();
             if (sanitized) {
               inputBuffer += sanitized;
               writeTerminal(sanitized);
@@ -1490,7 +1540,8 @@ async function init() {
         fileNameEditor.blur();
       }
       if (e.key === "Escape") {
-        fileNameEditor.textContent = document.querySelector("title").textContent;
+        fileNameEditor.textContent =
+          document.querySelector("title").textContent;
         fileNameEditor.blur();
       }
     });

@@ -41,6 +41,13 @@ RUN npm ci && npm cache clean --force
 
 COPY . .
 
+# Run as non-root for container security
+RUN useradd -m -u 1001 app \
+    && mkdir -p /app/tmp \
+    && chown -R app:app /app
+
+USER app
+
 # Go build cache on tmpfs — faster repeated go run calls within a session
 ENV GOCACHE=/tmp/go-cache
 ENV NODE_ENV=production

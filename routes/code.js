@@ -4,14 +4,7 @@ import fetch from "node-fetch";
 import QRCode from "qrcode";
 
 function generateShortId(length = 8) {
-  const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const bytes = crypto.randomBytes(length);
-  let id = "";
-  for (let i = 0; i < length; i++) {
-    id += chars[bytes[i] % chars.length];
-  }
-  return id;
+  return crypto.randomBytes(Math.ceil(length * 3 / 4)).toString('base64url').slice(0, length);
 }
 
 const mainDomain =
@@ -326,11 +319,14 @@ export default function createCodeRouter(codeCache) {
 
     const normalizedLanguage = normalizeLanguage(language);
 
+    const safeFilename = (filename || DEFAULT_CODES[normalizedLanguage]?.filename || 'main.cpp')
+      .replace(/[^a-zA-Z0-9._-]/g, '')
+      .slice(0, 100) || 'main.cpp';
+
     const data = {
       message: true,
       type: "default",
-      filename:
-        filename || DEFAULT_CODES[normalizedLanguage]?.filename || "main.cpp",
+      filename: safeFilename,
       code,
       language: normalizedLanguage,
     };
@@ -351,11 +347,15 @@ export default function createCodeRouter(codeCache) {
   router.post("/generate-qrcode", async (req, res) => {
     const { url } = req.body;
 
-    if (!url) {
+    if (!url || typeof url !== 'string') {
       return res.status(400).json({ error: "URL is required" });
     }
 
     try {
+      const parsed = new URL(url);
+      if (!['http:', 'https:'].includes(parsed.protocol)) {
+        return res.status(400).json({ error: "Invalid URL" });
+      }
       const qrcodeUrl = await QRCode.toDataURL(url, { margin: 2 });
 
       return res.status(200).json({
