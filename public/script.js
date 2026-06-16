@@ -1160,7 +1160,7 @@ async function init() {
     setRunLoading(false);
   }
 
-  function handleSocketClose() {
+  function handleSocketClose(event) {
     isRunning = false;
     currentRunId = null;
     inputBuffer = "";
@@ -1172,6 +1172,17 @@ async function init() {
     const statusElement = document.querySelector(
       ".status-item:nth-child(2) span",
     );
+
+    // 1008 = rate limited by server — wait longer, don't loop
+    if (event && event.code === 1008) {
+      if (statusElement) {
+        statusElement.textContent = "Rate limited";
+        statusElement.style.color = "var(--error-text)";
+      }
+      setTimeout(() => connectWebSocket(), 15000);
+      return;
+    }
+
     if (statusElement) {
       statusElement.textContent = "Reconnecting...";
       statusElement.style.color = "var(--warning-text)";

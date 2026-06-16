@@ -8,7 +8,7 @@ import { performance } from "perf_hooks";
 import { fileURLToPath } from "url";
 
 const wsConnections = new Map();
-const WS_MAX_PER_IP = 5;
+const WS_MAX_PER_IP = 30;
 const WS_WINDOW_MS = 60_000;
 
 function wsRateCheck(ip) {
