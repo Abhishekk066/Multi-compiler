@@ -1,19 +1,19 @@
 !(function (e, t) {
-  'object' == typeof exports && 'object' == typeof module
+  "object" == typeof exports && "object" == typeof module
     ? (module.exports = t())
-    : 'function' == typeof define && define.amd
+    : "function" == typeof define && define.amd
       ? define([], t)
-      : 'object' == typeof exports
+      : "object" == typeof exports
         ? (exports.FitAddon = t())
         : (e.FitAddon = t());
 })(self, () =>
   (() => {
-    'use strict';
+    "use strict";
     var e = {};
     return (
       (() => {
         var t = e;
-        (Object.defineProperty(t, '__esModule', { value: !0 }),
+        (Object.defineProperty(t, "__esModule", { value: !0 }),
           (t.FitAddon = void 0),
           (t.FitAddon = class {
             activate(e) {
@@ -47,17 +47,17 @@
                 i = window.getComputedStyle(
                   this._terminal.element.parentElement,
                 ),
-                o = parseInt(i.getPropertyValue('height')),
-                s = Math.max(0, parseInt(i.getPropertyValue('width'))),
+                o = parseInt(i.getPropertyValue("height")),
+                s = Math.max(0, parseInt(i.getPropertyValue("width"))),
                 n = window.getComputedStyle(this._terminal.element),
                 l =
                   o -
-                  (parseInt(n.getPropertyValue('padding-top')) +
-                    parseInt(n.getPropertyValue('padding-bottom'))),
+                  (parseInt(n.getPropertyValue("padding-top")) +
+                    parseInt(n.getPropertyValue("padding-bottom"))),
                 a =
                   s -
-                  (parseInt(n.getPropertyValue('padding-right')) +
-                    parseInt(n.getPropertyValue('padding-left'))) -
+                  (parseInt(n.getPropertyValue("padding-right")) +
+                    parseInt(n.getPropertyValue("padding-left"))) -
                   r;
               return {
                 cols: Math.max(2, Math.floor(a / t.css.cell.width)),

@@ -1,13 +1,13 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const publicDir = path.join(__dirname, '../public');
-const sourceFile = path.join(publicDir, 'script.js');
-const targetFile = path.join(publicDir, 'script.min.js');
+const publicDir = path.join(__dirname, "../public");
+const sourceFile = path.join(publicDir, "script.js");
+const targetFile = path.join(publicDir, "script.min.js");
 
 export async function obfuscateScript() {
   try {
@@ -15,10 +15,9 @@ export async function obfuscateScript() {
       return;
     }
 
-    const sourceCode = fs.readFileSync(sourceFile, 'utf8');
-    const { default: JavaScriptObfuscator } = await import(
-      'javascript-obfuscator'
-    );
+    const sourceCode = fs.readFileSync(sourceFile, "utf8");
+    const { default: JavaScriptObfuscator } =
+      await import("javascript-obfuscator");
 
     const obfuscationResult = JavaScriptObfuscator.obfuscate(sourceCode, {
       compact: true,
@@ -30,9 +29,9 @@ export async function obfuscateScript() {
       unicodeEscapeSequence: false,
     });
 
-    fs.writeFileSync(targetFile, obfuscationResult.getObfuscatedCode(), 'utf8');
-    console.log('[obfuscator] script.min.js regenerated');
+    fs.writeFileSync(targetFile, obfuscationResult.getObfuscatedCode(), "utf8");
+    console.log("[obfuscator] script.min.js regenerated");
   } catch (error) {
-    console.error('[obfuscator] Failed:', error.message);
+    console.error("[obfuscator] Failed:", error.message);
   }
 }

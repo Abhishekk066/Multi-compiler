@@ -2,8 +2,12 @@
 // without depending on cross-origin <script src> loading (which has timing issues).
 let _polySrc = "";
 fetch("/poly-storage.js")
-  .then(function (r) { return r.text(); })
-  .then(function (t) { _polySrc = t; })
+  .then(function (r) {
+    return r.text();
+  })
+  .then(function (t) {
+    _polySrc = t;
+  })
   .catch(function () {});
 
 async function init() {
@@ -415,7 +419,9 @@ async function init() {
     history.replaceState(
       null,
       "",
-      currentLanguage === "html" ? "/html" : `/${currentLanguage}-online-compiler`,
+      currentLanguage === "html"
+        ? "/html"
+        : `/${currentLanguage}-online-compiler`,
     );
   } else {
     // Clean trailing slash for share URLs
@@ -440,7 +446,8 @@ async function init() {
 
       li.addEventListener("click", () => {
         if (currentLanguage === key) return;
-        window.location.href = key === "html" ? "/html" : `/${key}-online-compiler`;
+        window.location.href =
+          key === "html" ? "/html" : `/${key}-online-compiler`;
       });
       sidebarList.appendChild(li);
     });
@@ -1743,16 +1750,32 @@ async function init() {
 
   const themeSelector = document.getElementById("theme-selector");
   const themeToggle = document.querySelector(".mode");
-  const savedMode = sessionStorage.getItem("themeMode");
+  const savedMode =
+    sessionStorage.getItem("themeMode") || localStorage.getItem("themeMode");
   const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 
   let themeFlag = savedMode ? savedMode === "dark" : prefersDarkScheme.matches;
 
+  function saveThemeMode(dark) {
+    const val = dark ? "dark" : "light";
+    sessionStorage.setItem("themeMode", val);
+    localStorage.setItem("themeMode", val);
+  }
+
   prefersDarkScheme.addEventListener("change", (e) => {
-    if (!sessionStorage.getItem("themeMode")) {
-      themeFlag = e.matches;
-      applyThemeSettings();
-    }
+    themeFlag = e.matches;
+    saveThemeMode(themeFlag);
+    sessionStorage.setItem("selectedTheme", themeFlag ? "dracula" : "default");
+    applyThemeSettings();
+  });
+
+  // Sync from landing page or other tabs via localStorage
+  window.addEventListener("storage", (e) => {
+    if (e.key !== "themeMode") return;
+    themeFlag = e.newValue === "dark";
+    sessionStorage.setItem("themeMode", e.newValue);
+    sessionStorage.setItem("selectedTheme", themeFlag ? "dracula" : "default");
+    applyThemeSettings();
   });
 
   function updateThemeOptions(themes) {
@@ -1780,11 +1803,12 @@ async function init() {
       editor.setOption("theme", theme);
     }
     sessionStorage.setItem("selectedTheme", theme);
+    localStorage.setItem("selectedTheme", theme);
   }
 
   function toggleTheme() {
     themeFlag = !themeFlag;
-    sessionStorage.setItem("themeMode", themeFlag ? "dark" : "light");
+    saveThemeMode(themeFlag);
     sessionStorage.setItem("selectedTheme", themeFlag ? "dracula" : "default");
     applyThemeSettings();
     showToast(`Switched to ${themeFlag ? "dark" : "light"} mode!`);
@@ -1796,10 +1820,10 @@ async function init() {
       term.options.theme = themeFlag ? darkTerminalTheme : lightTerminalTheme;
     }
     themeToggle.innerHTML = themeFlag
-      ? '<i class="fas fa-sun"></i><span class="hidden-mobile">Day</span>'
-      : '<i class="fas fa-moon"></i><span class="hidden-mobile">Night</span>';
+      ? '<i class="fas fa-sun"></i>'
+      : '<i class="fas fa-moon"></i>';
     updateThemeOptions(themeFlag ? darkThemes : lightThemes);
-    const currentSavedTheme = sessionStorage.getItem("selectedTheme");
+    const currentSavedTheme = sessionStorage.getItem("selectedTheme") || localStorage.getItem("selectedTheme");
     const defaultTheme =
       currentSavedTheme || (themeFlag ? "dracula" : "default");
     themeSelector.value = defaultTheme;
