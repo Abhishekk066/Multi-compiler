@@ -2357,7 +2357,10 @@ async function init() {
       fullEditor.style.background = "";
       editorContainer.style.display = "block";
       outputContainer.style.display = "block";
-      dragbarVertical.style.display = "block";
+      // "flex" (not "block") to match #dragbar's CSS display mode —
+      // otherwise this inline style overrides it and breaks the
+      // flex-centered grip line/dots inside the handle.
+      dragbarVertical.style.display = "flex";
       editorContainer.classList.remove("editor-fullscreen");
       outputContainer.classList.remove("output-fullscreen");
       toggleViewBtn.innerHTML =
