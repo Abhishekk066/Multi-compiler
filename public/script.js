@@ -297,114 +297,121 @@ async function init() {
     }
   });
 
+  const DEVICON_BASE =
+    "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons";
+  function langIcon(slug, alt, invert) {
+    return `<img src="${DEVICON_BASE}/${slug}-original.svg" alt="${alt}" loading="lazy"${invert ? ' class="icon-invert"' : ""} />`;
+  }
+
+  // Ordered by real-world usage popularity (Stack Overflow Developer Survey)
   const LANG_CONFIG = {
-    cpp: {
-      mode: "text/x-c++src",
-      label: "C++",
-      filename: "main.cpp",
-      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><text x="12" y="17" text-anchor="middle" font-size="13" font-weight="bold" font-family="Arial">C++</text></svg>',
-    },
-    c: {
-      mode: "text/x-csrc",
-      label: "C",
-      filename: "main.c",
-      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><text x="12" y="17" text-anchor="middle" font-size="16" font-weight="bold" font-family="Arial">C</text></svg>',
-    },
-    java: {
-      mode: "text/x-java",
-      label: "Java",
-      filename: "Main.java",
-      svg: '<svg viewBox="0 0 128 128" fill="currentColor" width="20" height="20"><path d="M47.6 98.6c-3 1.6-7.5 3-7.5 3s2.6 1.5 7 2.1c5.8.8 12.2 1 18.6-.1 0 0 2.1 1.3 4.9 2.5-17.3 7.3-39.2-.4-23-7.5zm-3.7-8.5s-8.3 6.2 5.9 6.5c12.7.3 19.7-.3 33.5-4.5 0 0 3.7 3.7-6.3 7-22 7.3-46.3 1-33.9-3.8-1.2-.2 .8-5.2.8-5.2z"/><path d="M69.1 61.5c7.1 8.2-1.9 15.6-1.9 15.6s18.1-9.3 9.8-21c-7.7-10.9-13.7-16.3 18.5-35 0 0-50.5 12.6-26.4 40.4z"/><path d="M102.4 108.9s3 2.5-3.3 4.4c-12.1 3.7-50.2 4.8-60.8.1-3.8-1.7 3.3-4 5.5-4.5 2.3-.5 3.6-.4 3.6-.4-4.1-2.9-26.7 5.7-11.5 8.2 41.6 6.8 75.9-3.1 66.5-7.8zM49.7 72.3c-17.5 7.2-6.6 14.1-2.6 13.2 1-.2 1.6-.4 1.6-.4s-.4.7-1.2 1c-8.9 3.3-26 1.9-21.1-1.8 5.9-4.4 23.3-12 23.3-12zm14.5 20.3c18 2.3 45.7-1.3 46.4-18 0 0-1.3 6.5-14.6 11.7-15 5.8-33.5 5.1-44.4 1.4 0 0 2.2 1.9 12.6 4.9z"/><path d="M76.5 1.4s15.6 15.6-14.8 39.5c-24.4 19.2-5.6 30.1 0 42.6-14.2-12.8-24.6-24.1-17.6-34.6C54.4 33.7 82.3 26.3 76.5 1.4z"/></svg>',
-    },
-    python: {
-      mode: "text/x-python",
-      label: "Python",
-      filename: "main.py",
-      svg: '<svg viewBox="0 0 128 128" fill="currentColor" width="20" height="20"><path d="M49.3 62H78.7c8.8 0 15.8-7.3 15.8-16.2V18.6c0-8.6-7.3-15.1-16-16.4-5.5-.8-11.2-1.2-16.7-1.1-5.5 0-10.7.4-15.4 1.1C35.2 3.8 30 9.5 30 18.6v11.8h34v3.9H30 18.7c-9.3 0-17.4 5.6-20 16.2-2.9 12.2-3.1 19.8 0 32.5 2.3 9.5 7.7 16.2 17 16.2H26V85.3c0-10.6 9.2-20 20-20h33.3c8.9 0 16-7.3 16-16.2v-27c0-8.7-7.3-15.2-16-16.8-5.5-.9-11.2-1.3-16.8-1.2-5.5 0-10.7.4-15.3 1.2-8.7 1.6-12.9 6.3-12.9 16.8V46H68v3.9H49.3v12zm-2.8-39.8c-3.3 0-6-2.7-6-6.1 0-3.4 2.7-6.1 6-6.1 3.3 0 6 2.7 6 6.1 0 3.4-2.7 6.1-6 6.1z"/><path d="M112.4 50.2c-2.3-9.3-6.7-16.2-16-16.2H87v12.8c0 11.1-9.4 20.4-20.3 20.4H33.4c-8.8 0-16 7.5-16 16.3V110.5c0 8.6 7.5 13.7 16 16.2 10.2 3 19.9 3.6 32 0 8-2.4 16-7.2 16-16.2V98.7H48v-3.9h33.3 16c9.3 0 12.8-6.5 16-16.2 3.3-10 3.2-19.7 0-32.5zM81.5 105.9c3.3 0 6 2.7 6 6.1 0 3.4-2.7 6.1-6 6.1-3.3 0-6-2.7-6-6.1 0-3.3 2.7-6.1 6-6.1z"/></svg>',
-    },
     javascript: {
       mode: "text/javascript",
       label: "JavaScript",
       filename: "main.js",
-      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><rect width="24" height="24" rx="2" fill="currentColor" opacity="0.15"/><text x="12" y="17" text-anchor="middle" font-size="12" font-weight="bold" font-family="Arial">JS</text></svg>',
-    },
-    typescript: {
-      mode: "text/typescript",
-      label: "TypeScript",
-      filename: "main.ts",
-      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><rect width="24" height="24" rx="2" fill="currentColor" opacity="0.15"/><text x="12" y="17" text-anchor="middle" font-size="12" font-weight="bold" font-family="Arial">TS</text></svg>',
-    },
-    go: {
-      mode: "text/x-go",
-      label: "Go",
-      filename: "main.go",
-      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><text x="12" y="17" text-anchor="middle" font-size="14" font-weight="bold" font-family="Arial">Go</text></svg>',
-    },
-    kotlin: {
-      mode: "text/x-kotlin",
-      label: "Kotlin",
-      filename: "main.kt",
-      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><polygon points="0,24 12,12 24,24" fill="currentColor" opacity="0.5"/><polygon points="0,0 24,0 12,12 0,24" fill="currentColor"/></svg>',
-    },
-    ruby: {
-      mode: "text/x-ruby",
-      label: "Ruby",
-      filename: "main.rb",
-      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><polygon points="12,2 22,9 18,22 6,22 2,9" fill="currentColor"/></svg>',
-    },
-    php: {
-      mode: "application/x-httpd-php",
-      label: "PHP",
-      filename: "main.php",
-      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><ellipse cx="12" cy="12" rx="11" ry="7" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="1"/><text x="12" y="15" text-anchor="middle" font-size="9" font-weight="bold" font-family="Arial">PHP</text></svg>',
-    },
-    bash: {
-      mode: "text/x-sh",
-      label: "Bash",
-      filename: "main.sh",
-      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><rect x="2" y="3" width="20" height="18" rx="2" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="1"/><text x="12" y="16" text-anchor="middle" font-size="10" font-weight="bold" font-family="monospace">&gt;_</text></svg>',
-    },
-    rust: {
-      mode: "text/x-rustsrc",
-      label: "Rust",
-      filename: "main.rs",
-      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><text x="12" y="17" text-anchor="middle" font-size="13" font-weight="bold" font-family="Arial">Rs</text></svg>',
-    },
-    csharp: {
-      mode: "text/x-csharp",
-      label: "C#",
-      filename: "main.cs",
-      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><text x="12" y="17" text-anchor="middle" font-size="13" font-weight="bold" font-family="Arial">C#</text></svg>',
-    },
-    perl: {
-      mode: "text/x-perl",
-      label: "Perl",
-      filename: "main.pl",
-      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><text x="12" y="17" text-anchor="middle" font-size="11" font-weight="bold" font-family="Arial">Perl</text></svg>',
-    },
-    lua: {
-      mode: "text/x-lua",
-      label: "Lua",
-      filename: "main.lua",
-      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><text x="12" y="17" text-anchor="middle" font-size="11" font-weight="bold" font-family="Arial">Lua</text></svg>',
-    },
-    r: {
-      mode: "text/x-rsrc",
-      label: "R",
-      filename: "main.r",
-      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><text x="12" y="17" text-anchor="middle" font-size="16" font-weight="bold" font-family="Arial">R</text></svg>',
+      svg: langIcon("javascript/javascript", "JavaScript"),
     },
     html: {
       mode: "text/html",
       label: "HTML",
       filename: "index.html",
-      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><rect width="24" height="24" rx="2" fill="currentColor" opacity="0.15"/><text x="12" y="16" text-anchor="middle" font-size="8" font-weight="bold" font-family="Arial">HTML</text></svg>',
+      svg: langIcon("html5/html5", "HTML"),
+    },
+    python: {
+      mode: "text/x-python",
+      label: "Python",
+      filename: "main.py",
+      svg: langIcon("python/python", "Python"),
     },
     sql: {
       mode: "text/x-sql",
       label: "SQL",
       filename: "main.sql",
-      svg: '<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><ellipse cx="12" cy="6" rx="8" ry="3" fill="currentColor"/><path d="M4 6v5c0 1.66 3.58 3 8 3s8-1.34 8-3V6" fill="currentColor" opacity="0.5"/><path d="M4 11v5c0 1.66 3.58 3 8 3s8-1.34 8-3v-5" fill="currentColor" opacity="0.3"/></svg>',
+      svg: langIcon("mysql/mysql", "SQL"),
+    },
+    typescript: {
+      mode: "text/typescript",
+      label: "TypeScript",
+      filename: "main.ts",
+      svg: langIcon("typescript/typescript", "TypeScript"),
+    },
+    bash: {
+      mode: "text/x-sh",
+      label: "Bash",
+      filename: "main.sh",
+      svg: langIcon("bash/bash", "Bash", true),
+    },
+    java: {
+      mode: "text/x-java",
+      label: "Java",
+      filename: "Main.java",
+      svg: langIcon("java/java", "Java"),
+    },
+    csharp: {
+      mode: "text/x-csharp",
+      label: "C#",
+      filename: "main.cs",
+      svg: langIcon("csharp/csharp", "C#"),
+    },
+    cpp: {
+      mode: "text/x-c++src",
+      label: "C++",
+      filename: "main.cpp",
+      svg: langIcon("cplusplus/cplusplus", "C++"),
+    },
+    php: {
+      mode: "application/x-httpd-php",
+      label: "PHP",
+      filename: "main.php",
+      svg: langIcon("php/php", "PHP"),
+    },
+    c: {
+      mode: "text/x-csrc",
+      label: "C",
+      filename: "main.c",
+      svg: langIcon("c/c", "C"),
+    },
+    go: {
+      mode: "text/x-go",
+      label: "Go",
+      filename: "main.go",
+      svg: langIcon("go/go", "Go"),
+    },
+    rust: {
+      mode: "text/x-rustsrc",
+      label: "Rust",
+      filename: "main.rs",
+      svg: langIcon("rust/rust", "Rust", true),
+    },
+    kotlin: {
+      mode: "text/x-kotlin",
+      label: "Kotlin",
+      filename: "main.kt",
+      svg: langIcon("kotlin/kotlin", "Kotlin"),
+    },
+    lua: {
+      mode: "text/x-lua",
+      label: "Lua",
+      filename: "main.lua",
+      svg: langIcon("lua/lua", "Lua"),
+    },
+    ruby: {
+      mode: "text/x-ruby",
+      label: "Ruby",
+      filename: "main.rb",
+      svg: langIcon("ruby/ruby", "Ruby"),
+    },
+    r: {
+      mode: "text/x-rsrc",
+      label: "R",
+      filename: "main.r",
+      svg: langIcon("r/r", "R"),
+    },
+    perl: {
+      mode: "text/x-perl",
+      label: "Perl",
+      filename: "main.pl",
+      svg: langIcon("perl/perl", "Perl"),
     },
   };
 
@@ -740,7 +747,6 @@ async function init() {
 
   async function encryptText(text) {
     if (!hasSubtleCrypto) {
-      // Insecure context fallback: encode only
       return (
         "b64:" + btoa(String.fromCharCode(...new TextEncoder().encode(text)))
       );
@@ -1522,19 +1528,26 @@ async function init() {
 
     function startMobileRename() {
       fileNameEditor.setAttribute("contenteditable", "true");
-      fileNameEditor.focus();
-      // Place a visible cursor at the end of the name instead of selecting all
-      const range = document.createRange();
-      range.selectNodeContents(fileNameEditor);
-      range.collapse(false);
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
+      // Give mobile WebKit/Chrome a tick to register the contenteditable
+      // change before focusing — focusing in the same frame it's set
+      // is what causes the keyboard to flash open and immediately close.
+      requestAnimationFrame(() => {
+        fileNameEditor.focus();
+        // Place a visible cursor at the end of the name instead of selecting all
+        const range = document.createRange();
+        range.selectNodeContents(fileNameEditor);
+        range.collapse(false);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      });
     }
 
     fileNameEditor.addEventListener("click", (e) => {
-      // While editable, keep clicks from triggering the parent view switch
-      if (fileNameEditor.isContentEditable) e.stopPropagation();
+      // Always keep file-name taps from bubbling into the parent's
+      // "switch to editor" button — touchend below drives that on mobile,
+      // and showFullEditor() is a no-op on desktop anyway.
+      e.stopPropagation();
     });
 
     fileNameEditor.addEventListener("dblclick", (e) => {
@@ -1544,15 +1557,27 @@ async function init() {
     });
 
     let lastTap = 0;
+    let singleTapTimer = null;
     fileNameEditor.addEventListener("touchend", (e) => {
       if (!isMobileView() || fileNameEditor.isContentEditable) return;
+      e.preventDefault();
+      e.stopPropagation();
+
       const now = Date.now();
+      clearTimeout(singleTapTimer);
       if (now - lastTap < 350) {
-        e.preventDefault();
-        e.stopPropagation();
+        lastTap = 0;
         startMobileRename();
+        return;
       }
       lastTap = now;
+      // Wait to see if a second tap arrives before treating this as the
+      // "switch to editor" tap — otherwise the first tap of a double-tap
+      // fires showFullEditor() and its layout/refresh churn steals focus
+      // back from the rename field right as the keyboard tries to open.
+      singleTapTimer = setTimeout(() => {
+        if (!fileNameEditor.isContentEditable) showFullEditor();
+      }, 350);
     });
 
     fileNameEditor.addEventListener("keydown", (e) => {
@@ -1838,7 +1863,9 @@ async function init() {
       ? '<i class="fas fa-sun"></i>'
       : '<i class="fas fa-moon"></i>';
     updateThemeOptions(themeFlag ? darkThemes : lightThemes);
-    const currentSavedTheme = sessionStorage.getItem("selectedTheme") || localStorage.getItem("selectedTheme");
+    const currentSavedTheme =
+      sessionStorage.getItem("selectedTheme") ||
+      localStorage.getItem("selectedTheme");
     const defaultTheme =
       currentSavedTheme || (themeFlag ? "dracula" : "default");
     themeSelector.value = defaultTheme;
