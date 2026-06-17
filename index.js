@@ -124,7 +124,7 @@ async function serveCompilerPage(res, lang) {
   html = html
     .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`)
     .replace(
-      /<meta[\s\S]*?name="description"[\s\S]*?\/>/,
+      /<meta\s+name="description"[^>]*>/,
       `<meta name="description" content="${meta.desc}" />`,
     )
     .replace(

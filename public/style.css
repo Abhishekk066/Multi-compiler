@@ -1202,7 +1202,7 @@ label {
 }
 
 /* Responsive styles */
-@media (max-width: 1024px) {
+@media (max-width: 600px), (max-height: 450px) {
   .sidebar {
     position: absolute;
     height: 100%;
@@ -1242,16 +1242,25 @@ label {
     height: 100% !important;
   }
 
-  .file-name {
-    max-width: 130px;
+  .file-name,
+  .output-btn,
+  .btn-large button {
+    height: 40px;
+    font-size: 15px;
+  }
+
+  .btn i {
+    margin-right: 7px;
   }
 
   .file-name {
-    padding: 7px 10px 8px;
+    max-width: 130px;
+    padding: 8px 10px;
   }
 
   .file-name i {
-    font-size: 19px;
+    font-size: 18px;
+    margin-right: 7px;
   }
 
   .hidden-mobile {
@@ -1267,14 +1276,14 @@ label {
     background: none;
     border: none;
     color: var(--text-primary);
-    font-size: 33px;
+    font-size: 32px;
     cursor: pointer;
-    padding: 4px 10px 0;
+    padding: 3px 9px 0;
   }
 
   .btn-large {
     position: absolute;
-    right: 5rem;
+    right: 4.8rem;
     display: flex !important;
     margin: 0 !important;
   }
@@ -1285,9 +1294,8 @@ label {
 
   .btn-large button {
     background-color: rgba(255, 255, 255, 0.05);
-    padding: 7px 12px 8px;
+    padding: 8px 14px;
     border-radius: 6px;
-    font-size: 14px;
     overflow: hidden;
   }
 
@@ -1387,30 +1395,33 @@ label {
     height: 100% !important;
   }
 
-  .file-name {
-    max-width: 130px;
-  }
-
   .status-bar {
     display: flex;
   }
 
-  .file-name {
-    padding: 5px 10px 6px;
+  .file-name,
+  .output-btn,
+  .btn-large button {
+    height: 37px;
     font-size: 14px;
   }
 
+  .file-name {
+    max-width: 120px;
+    padding: 7px 9px;
+  }
+
   .file-name i {
-    font-size: 14px;
+    font-size: 16px;
   }
 
   #menu-toggle {
     font-size: 28px;
-    padding: 0 10px;
+    padding: 0 8px;
   }
 
   .btn-large {
-    right: 3.6rem;
+    right: 4.2rem;
   }
 
   .btn-large button i {
@@ -1419,8 +1430,7 @@ label {
   }
 
   .btn-large button {
-    padding: 4px 12px 5px;
-    font-size: 14px;
+    padding: 5px 8px;
     overflow: hidden;
   }
 
@@ -1486,39 +1496,41 @@ label {
     height: 100% !important;
   }
 
-  .file-name {
-    max-width: 130px;
-  }
-
   .status-bar {
     display: flex;
   }
 
+  .file-name,
+  .output-btn,
+  .btn-large button {
+    height: 35px;
+    font-size: 13.5px;
+  }
+
   .file-name {
-    padding: 6px 10px 7px;
-    font-size: 14px;
+    max-width: 110px;
+    padding: 6px 8px;
   }
 
   .file-name i {
-    font-size: 14px;
+    font-size: 15px;
   }
 
   #menu-toggle {
-    font-size: 25px;
-    padding: 0 10px;
+    font-size: 26px;
+    padding: 0 8px;
   }
 
   .btn-large {
-    right: 3rem;
+    right: 3.6rem;
   }
 
   .btn-large button i {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .btn-large button {
-    padding: 5px 12px 6px;
-    font-size: 14px;
+    padding: 4px 8px;
     overflow: hidden;
     margin: 4px !important;
   }
@@ -1588,17 +1600,20 @@ label {
     height: 100% !important;
   }
 
-  .file-name {
-    max-width: 100px;
-  }
-
   .status-bar {
     display: flex;
   }
 
+  .file-name,
+  .output-btn,
+  .btn-large button {
+    height: 33px;
+    font-size: 13px;
+  }
+
   .file-name {
-    padding: 5px 10px 6px;
-    font-size: 14px;
+    max-width: 100px;
+    padding: 6px 7px;
   }
 
   .file-name i {
@@ -1606,21 +1621,20 @@ label {
   }
 
   #menu-toggle {
-    font-size: 25px;
-    padding: 0 7px;
+    font-size: 24px;
+    padding: 0 6px;
   }
 
   .btn-large {
-    right: 2.7rem;
+    right: 3.2rem;
   }
 
   .btn-large button i {
-    font-size: 10px;
+    font-size: 11px;
   }
 
   .btn-large button {
-    padding: 4px 8px 5px;
-    font-size: 14px;
+    padding: 4px 7px;
     overflow: hidden;
     margin: 3px !important;
   }
@@ -1658,7 +1672,7 @@ label {
   }
 }
 
-@media (min-width: 1025px) {
+@media (min-width: 601px) and (min-height: 451px) {
   .hidden-mobile {
     display: none !important;
   }
@@ -1682,7 +1696,7 @@ label {
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 600px), (max-height: 450px) {
   html,
   body {
     height: 100dvh;
@@ -2007,7 +2021,7 @@ label {
   animation: shimmer 1.5s infinite;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 600px), (max-height: 450px) {
   .cursor-pos {
     display: none;
   }
@@ -2259,14 +2273,14 @@ label {
   display: none;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 600px), (max-height: 450px) {
   .mobile-context-actions {
     display: contents;
   }
 }
 
 /* --- Compact 2-column mobile menu --- */
-@media (max-width: 1024px) {
+@media (max-width: 600px), (max-height: 450px) {
   .btn-con .btn-con-inner {
     display: grid;
     grid-template-columns: 1fr 1fr;
