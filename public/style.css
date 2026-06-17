@@ -1202,7 +1202,7 @@ label {
 }
 
 /* Responsive styles */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .sidebar {
     position: absolute;
     height: 100%;
@@ -1658,7 +1658,7 @@ label {
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1025px) {
   .hidden-mobile {
     display: none !important;
   }
@@ -1682,7 +1682,7 @@ label {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   html,
   body {
     height: 100dvh;
@@ -2007,7 +2007,7 @@ label {
   animation: shimmer 1.5s infinite;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .cursor-pos {
     display: none;
   }
@@ -2259,14 +2259,14 @@ label {
   display: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .mobile-context-actions {
     display: contents;
   }
 }
 
 /* --- Compact 2-column mobile menu --- */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .btn-con .btn-con-inner {
     display: grid;
     grid-template-columns: 1fr 1fr;
