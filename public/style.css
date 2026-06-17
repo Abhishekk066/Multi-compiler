@@ -645,49 +645,52 @@ body,
 }
 
 #dragbar {
-  width: 5px;
-  height: 45px;
+  width: 6px;
+  height: 60px;
   top: 50%;
-  left: -2.5px;
+  left: -3px;
   transform: translateY(-50%);
   cursor: ew-resize;
   position: absolute;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 4px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 8px;
   z-index: 9999;
-  background-color: var(--dragbar-bg);
+  background: linear-gradient(180deg, var(--dragbar-bg), var(--dragbar-hover));
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  box-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
-#dragbar::before,
-#dragbar::after {
+#dragbar::before {
   content: "";
   display: block;
-  width: 3px;
-  height: 3px;
-  margin: 2px 0;
-  background-color: var(--bg-primary);
-  border-radius: 50%;
-  opacity: 0.6;
+  width: 2px;
+  height: 22px;
+  border-radius: 2px;
+  background-color: rgba(255, 255, 255, 0.5);
+  transition: background-color 0.25s ease;
 }
 
 #dragbar:active,
 #dragbar:hover {
-  background: var(--dragbar-hover);
-  width: 7px;
-  left: -3.5px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  width: 8px;
+  left: -4px;
+  background: linear-gradient(
+    180deg,
+    var(--accent-primary),
+    var(--accent-secondary)
+  );
+  box-shadow:
+    0 4px 16px rgba(37, 99, 235, 0.45),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.15);
 }
 
 #dragbar:active::before,
-#dragbar:active::after,
-#dragbar:hover::before,
-#dragbar:hover::after {
-  opacity: 0.9;
+#dragbar:hover::before {
+  background-color: #fff;
 }
 
 label {
@@ -695,44 +698,30 @@ label {
 }
 
 #dragbar-horizontal {
-  height: 5px;
-  width: 45px;
+  height: 18px;
+  width: 60px;
   margin: 0 auto;
   cursor: ns-resize;
-  background: var(--dragbar-bg);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-  border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-#dragbar-horizontal::before,
-#dragbar-horizontal::after {
-  content: "";
-  display: block;
-  width: 3px;
-  height: 3px;
-  margin: 0 2px;
-  background-color: var(--bg-primary);
-  border-radius: 50%;
-  opacity: 0.6;
+  position: relative;
+  background: linear-gradient(90deg, var(--dragbar-bg), var(--dragbar-hover));
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 9px;
+  box-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
 #dragbar-horizontal:hover,
 #dragbar-horizontal:active {
-  background: var(--dragbar-hover);
-  height: 7px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-#dragbar-horizontal:active::before,
-#dragbar-horizontal:active::after,
-#dragbar-horizontal:hover::before,
-#dragbar-horizontal:hover::after {
-  opacity: 0.9;
+  height: 20px;
+  background: linear-gradient(
+    90deg,
+    var(--accent-primary),
+    var(--accent-secondary)
+  );
+  box-shadow:
+    0 4px 16px rgba(37, 99, 235, 0.45),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.15);
 }
 
 label {
