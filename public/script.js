@@ -453,7 +453,8 @@ async function init() {
       li.className = `sidebar-item ${key === currentLanguage ? "active" : ""}`;
       li.dataset.lang = key;
       li.innerHTML = cfg.svg;
-      li.title = cfg.label;
+      li.title = `${cfg.label} Online Compiler`;
+      li.setAttribute("aria-label", `${cfg.label} Online Compiler`);
 
       li.addEventListener("click", () => {
         if (currentLanguage === key) return;

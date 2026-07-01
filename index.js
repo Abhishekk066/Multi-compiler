@@ -46,7 +46,7 @@ function freeFaq(label) {
 const LANG_META = {
   cpp: {
     label: "C++",
-    desc: "Write and run C++ code online for free. Instant compilation with real-time output — no install needed.",
+    desc: "C++ Online Compiler: Write, compile, and run C++ code online for free. Instant compilation, real-time interactive terminal, and AI assistant.",
     about:
       "C++ is a compiled, high-performance language widely used in competitive programming, game engines, and systems software. CompileAny compiles your code with g++ and streams the output to a live terminal, so you can test algorithms and DSA problems without setting up a local toolchain.",
     faq: [
@@ -60,7 +60,7 @@ const LANG_META = {
   },
   c: {
     label: "C",
-    desc: "Write and run C code online for free. Instant compilation with real-time output — no install needed.",
+    desc: "C Online Compiler: Write, compile, and run C code online. Sandboxed GCC compiler, live terminal, and interactive stdin support.",
     about:
       "C is the foundational systems language behind operating systems, embedded firmware, and countless compilers. CompileAny runs your C code through gcc in an isolated Linux container, so you get standard, predictable compiler behavior for learning pointers, memory management, and data structures.",
     faq: [
@@ -74,7 +74,7 @@ const LANG_META = {
   },
   java: {
     label: "Java",
-    desc: "Write and run Java code online for free. Instant Java compiler in your browser, no setup required.",
+    desc: "Java Online Compiler: Compile and run Java code online. Free browser-based Java compiler using standard OpenJDK JVM with full console I/O.",
     about:
       "Java powers everything from Android apps to enterprise backends. CompileAny compiles your code with javac and runs it on the JVM, giving you real bytecode execution and full console I/O — ideal for practicing OOP, DSA, and interview problems.",
     faq: [
@@ -88,7 +88,7 @@ const LANG_META = {
   },
   python: {
     label: "Python",
-    desc: "Write and run Python code online for free. Instant Python 3 interpreter with real-time output.",
+    desc: "Python Online Compiler: Execute Python 3 scripts in your browser instantly. Free online Python interpreter with live stdin/stdout streaming.",
     about:
       "Python is the go-to language for scripting, data science, and quick prototyping thanks to its readable syntax. CompileAny runs your code with the Python 3 interpreter and streams output live, so loops, input(), and print statements behave exactly as they would locally.",
     faq: [
@@ -102,7 +102,7 @@ const LANG_META = {
   },
   javascript: {
     label: "JavaScript",
-    desc: "Write and run JavaScript code online for free. Node.js runtime, instant output in your browser.",
+    desc: "JavaScript Online Compiler: Write and run Node.js JavaScript online. Modern Node.js runtime with instant output and interactive console.",
     about:
       "JavaScript is the language of the web, and increasingly of the backend through Node.js. CompileAny executes your code on Node.js, so you can test async/await, array methods, and vanilla JS logic instantly without opening a browser console.",
     faq: [
@@ -116,7 +116,7 @@ const LANG_META = {
   },
   typescript: {
     label: "TypeScript",
-    desc: "Write and run TypeScript code online for free. Instant TypeScript compiler, no install needed.",
+    desc: "TypeScript Online Compiler: Transpile and run TypeScript code online. Execute TS scripts directly using tsx compiler without setup.",
     about:
       "TypeScript adds static typing on top of JavaScript, catching errors before they hit runtime. CompileAny transpiles and executes your TypeScript directly, so you can test typed functions, interfaces, and generics without a separate build step.",
     faq: [
@@ -130,7 +130,7 @@ const LANG_META = {
   },
   go: {
     label: "Go",
-    desc: "Write and run Go code online for free. Instant Go compiler with real-time output in your browser.",
+    desc: "Go Online Compiler: Write, compile, and execute Go (Golang) code online. Sandboxed go build toolchain with instant live streaming.",
     about:
       "Go is prized for its simplicity, fast compilation, and strong concurrency model via goroutines. CompileAny compiles and runs your Go code instantly, making it easy to test functions, structs, and channels without installing the Go toolchain locally.",
     faq: [
@@ -144,7 +144,7 @@ const LANG_META = {
   },
   kotlin: {
     label: "Kotlin",
-    desc: "Write and run Kotlin code online for free. Instant Kotlin compiler in your browser.",
+    desc: "Kotlin Online Compiler: Compile and run Kotlin programs online. Sandboxed OpenJDK runtime supporting clean modern Kotlin.",
     about:
       "Kotlin is the modern, concise language for Android and JVM development, fully interoperable with Java. CompileAny compiles your Kotlin code with kotlinc and runs it on the JVM, so you can try coroutines, null-safety, and extension functions instantly.",
     faq: [
@@ -158,7 +158,7 @@ const LANG_META = {
   },
   ruby: {
     label: "Ruby",
-    desc: "Write and run Ruby code online for free. Instant Ruby interpreter with real-time output.",
+    desc: "Ruby Online Compiler: Execute Ruby scripts online in your browser. Standard ruby interpreter for fast coding and testing.",
     about:
       "Ruby is known for its elegant, human-readable syntax and is the backbone of the Rails framework. CompileAny runs your Ruby scripts through the standard ruby interpreter, ideal for quick scripting practice or testing Rails-style logic in isolation.",
     faq: [
@@ -172,7 +172,7 @@ const LANG_META = {
   },
   php: {
     label: "PHP",
-    desc: "Write and run PHP code online for free. Instant PHP interpreter in your browser, no setup needed.",
+    desc: "PHP Online Compiler: Write and execute PHP scripts online via the php-cli interpreter. Test PHP functions instantly.",
     about:
       "PHP powers a huge share of the web, from WordPress to custom backends. CompileAny executes your PHP code with the php-cli interpreter, so you can test functions, arrays, and string handling without configuring a local web server.",
     faq: [
@@ -186,7 +186,7 @@ const LANG_META = {
   },
   bash: {
     label: "Bash",
-    desc: "Write and run Bash scripts online for free. Instant shell execution in your browser.",
+    desc: "Bash Online Compiler: Run shell scripts online. Interactive standard bash environment for practicing script automation.",
     about:
       "Bash scripting is essential for automation, DevOps, and Linux system administration. CompileAny runs your shell scripts in a real bash environment, letting you test loops, pipes, and conditionals exactly as they'd behave on a Linux server.",
     faq: [
@@ -200,7 +200,7 @@ const LANG_META = {
   },
   rust: {
     label: "Rust",
-    desc: "Write and run Rust code online for free. Instant Rust compiler with real-time output.",
+    desc: "Rust Online Compiler: Compile and execute Rust code online. Fast rustc compiler sandbox for learning Rust safety.",
     about:
       "Rust delivers C++-level performance with memory safety guaranteed at compile time, making it popular for systems programming and WebAssembly. CompileAny compiles your Rust code with rustc, so you can test ownership, borrowing, and match expressions instantly.",
     faq: [
@@ -214,9 +214,9 @@ const LANG_META = {
   },
   csharp: {
     label: "C#",
-    desc: "Write and run C# code online for free. Instant C# compiler in your browser, no install needed.",
+    desc: "C# Online Compiler: Write and run C# code online. Sandboxed .NET/Mono environment for practicing C# coding.",
     about:
-      "C# is the primary language for .NET applications, Unity game development, and enterprise software. CompileAny compiles and runs your C# code using the Mono toolchain, so you can test classes, LINQ, and console I/O without installing Visual Studio.",
+      "C# is the primary language for .NET applications, game development, and enterprise software. CompileAny compiles and runs your C# code using the Mono toolchain, so you can test classes, LINQ, and console I/O without installing Visual Studio.",
     faq: [
       freeFaq("C#"),
       {
@@ -228,7 +228,7 @@ const LANG_META = {
   },
   perl: {
     label: "Perl",
-    desc: "Write and run Perl code online for free. Instant Perl interpreter with real-time output.",
+    desc: "Perl Online Compiler: Run Perl scripts online. Fast text processing interpreter for script testing.",
     about:
       "Perl remains a powerful tool for text processing, system administration, and legacy codebases. CompileAny runs your Perl scripts through the standard perl interpreter, making it easy to test regex, string manipulation, and one-liners.",
     faq: [
@@ -242,7 +242,7 @@ const LANG_META = {
   },
   lua: {
     label: "Lua",
-    desc: "Write and run Lua code online for free. Instant Lua interpreter in your browser.",
+    desc: "Lua Online Compiler: Execute Lua scripts online in your browser. Sandboxed Lua 5.4 environment.",
     about:
       "Lua is a lightweight, embeddable scripting language popular in game development and embedded systems. CompileAny runs your Lua code with Lua 5.4, giving you fast, sandboxed execution for testing scripts and game logic.",
     faq: [
@@ -256,7 +256,7 @@ const LANG_META = {
   },
   r: {
     label: "R",
-    desc: "Write and run R code online for free. Instant R interpreter with real-time output.",
+    desc: "R Online Compiler: Write and run R code online for free. Instant R interpreter with real-time output.",
     about:
       "R is the language of choice for statistical computing and data visualization. CompileAny executes your R scripts with Rscript, so you can test data manipulation, vectors, and statistical functions without installing RStudio.",
     faq: [
@@ -270,7 +270,7 @@ const LANG_META = {
   },
   html: {
     label: "HTML",
-    desc: "Write and preview HTML, CSS, and JavaScript online for free. Instant live preview in your browser.",
+    desc: "HTML Online Compiler: Write and preview HTML, CSS, and JavaScript online for free. Instant live preview in your browser.",
     about:
       "HTML, CSS, and JavaScript together form the foundation of every website. CompileAny renders your code in a real sandboxed iframe with a live preview, so you can see layout and styling changes instantly as you type — no local server needed.",
     faq: [
@@ -287,9 +287,9 @@ const LANG_META = {
   },
   sql: {
     label: "SQL",
-    desc: "Write and run SQL queries online for free. Instant SQL sandbox in your browser.",
+    desc: "SQL Online Compiler: Run SQL queries online in a live MySQL 8 database sandbox. Practice DDL and DML queries.",
     about:
-      "SQL is essential for working with relational databases, from simple queries to complex joins and aggregations. CompileAny runs your queries against a live MySQL 8 sandbox database, rendering results as a clean, readable table instead of raw text.",
+      "SQL is essential for working with relational databases, from simple queries to complex joins and aggregations. CompileAny runs your queries against a live MySQL 8 database, rendering results as a clean, readable table instead of raw text.",
     faq: [
       freeFaq("SQL"),
       {
@@ -305,11 +305,63 @@ const LANG_META = {
 };
 
 const INDEX_HTML_PATH = path.join(__dirname, "public/index.html");
+const LANDING_HTML_PATH = path.join(__dirname, "public/landing.html");
 
-async function serveCompilerPage(res, lang) {
-  const meta = LANG_META[lang];
-  if (!meta) return res.sendFile(INDEX_HTML_PATH);
+function injectGoogleScripts(html) {
+  const gaId = process.env.GA_TRACKING_ID;
+  const adsenseId = process.env.ADSENSE_CLIENT_ID;
+  const gtmId = process.env.GTM_TRACKING_ID;
 
+  let headScripts = "";
+  let bodyScripts = "";
+
+  if (gaId) {
+    headScripts += `
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=${gaId}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '${gaId}');
+  </script>`;
+  }
+
+  if (adsenseId) {
+    const formattedAdsenseId = adsenseId.startsWith("pub-") ? `ca-${adsenseId}` : adsenseId;
+    headScripts += `
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${formattedAdsenseId}" crossorigin="anonymous"></script>`;
+  }
+
+  if (gtmId) {
+    headScripts += `
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','${gtmId}');</script>
+  <!-- End Google Tag Manager -->`;
+
+    bodyScripts += `
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${gtmId}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->`;
+  }
+
+  if (headScripts) {
+    html = html.replace("</head>", `${headScripts}\n</head>`);
+  }
+
+  if (bodyScripts) {
+    html = html.replace(/<body[^>]*>/, (match) => `${match}\n${bodyScripts}`);
+  }
+
+  return html;
+}
+
+async function serveIndexHtml(res, meta = null, lang = null) {
   let html;
   try {
     html = await readFile(INDEX_HTML_PATH, "utf8");
@@ -317,43 +369,46 @@ async function serveCompilerPage(res, lang) {
     return res.sendFile(INDEX_HTML_PATH);
   }
 
-  const title = `${meta.label} Online Compiler — CompileAny`;
-  const slug = lang === "html" ? "html" : `${lang}-online-compiler`;
-  const canonical = `https://compileany.com/${slug}`;
+  html = injectGoogleScripts(html);
 
-  html = html
-    .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`)
-    .replace(
-      /<meta\s+name="description"[^>]*>/,
-      `<meta name="description" content="${meta.desc}" />`,
-    )
-    .replace(
-      /<link rel="canonical"[^>]*>/,
-      `<link rel="canonical" href="${canonical}" />`,
-    )
-    .replace(
-      /<meta\s+property="og:title"[^>]*id="og-title"[^>]*\/>/,
-      `<meta property="og:title" content="${title}" id="og-title" />`,
-    )
-    .replace(
-      /<meta\s+property="og:description"[^>]*id="og-description"[^>]*\/>/,
-      `<meta property="og:description" content="${meta.desc}" id="og-description" />`,
-    )
-    .replace(
-      /<meta\s+property="og:url"[^>]*id="og-url"[^>]*\/>/,
-      `<meta property="og:url" content="${canonical}" id="og-url" />`,
-    )
-    .replace(
-      /<meta\s+name="twitter:title"[^>]*id="twitter-title"[^>]*\/>/,
-      `<meta name="twitter:title" content="${title}" id="twitter-title" />`,
-    )
-    .replace(
-      /<meta\s+name="twitter:description"[^>]*id="twitter-description"[^>]*\/>/,
-      `<meta name="twitter:description" content="${meta.desc}" id="twitter-description" />`,
-    )
-    .replace(
-      /<script type="application\/ld\+json" id="ld-json">[\s\S]*?<\/script>/,
-      `<script type="application/ld+json" id="ld-json">
+  if (meta && lang) {
+    const title = `${meta.label} Online Compiler: Compile & Run ${meta.label} Code — CompileAny`;
+    const slug = lang === "html" ? "html" : `${lang}-online-compiler`;
+    const canonical = `https://compileany.com/${slug}`;
+
+    html = html
+      .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`)
+      .replace(
+        /<meta\s+name="description"[^>]*>/,
+        `<meta name="description" content="${meta.desc}" />`,
+      )
+      .replace(
+        /<link rel="canonical"[^>]*>/,
+        `<link rel="canonical" href="${canonical}" />`,
+      )
+      .replace(
+        /<meta\s+property="og:title"[^>]*id="og-title"[^>]*\/>/,
+        `<meta property="og:title" content="${title}" id="og-title" />`,
+      )
+      .replace(
+        /<meta\s+property="og:description"[^>]*id="og-description"[^>]*\/>/,
+        `<meta property="og:description" content="${meta.desc}" id="og-description" />`,
+      )
+      .replace(
+        /<meta\s+property="og:url"[^>]*id="og-url"[^>]*\/>/,
+        `<meta property="og:url" content="${canonical}" id="og-url" />`,
+      )
+      .replace(
+        /<meta\s+name="twitter:title"[^>]*id="twitter-title"[^>]*\/>/,
+        `<meta name="twitter:title" content="${title}" id="twitter-title" />`,
+      )
+      .replace(
+        /<meta\s+name="twitter:description"[^>]*id="twitter-description"[^>]*\/>/,
+        `<meta name="twitter:description" content="${meta.desc}" id="twitter-description" />`,
+      )
+      .replace(
+        /<script type="application\/ld\+json" id="ld-json">[\s\S]*?<\/script>/,
+        `<script type="application\/ld\+json" id="ld-json">
       {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
@@ -369,33 +424,33 @@ async function serveCompilerPage(res, lang) {
         "description": "${meta.desc}"
       }
     </script>`,
-    )
-    .replace(
-      /<h1 id="seo-h1">[^<]*<\/h1>/,
-      `<h1 id="seo-h1">${title}</h1>`,
-    )
-    .replace(
-      /<p id="seo-about-text">[^<]*<\/p>/,
-      `<p id="seo-about-text">${meta.about}</p>`,
-    )
-    .replace(
-      /<div id="seo-faq">[\s\S]*?<\/div>\s*<\/div>\s*<\/details>/,
-      `<div id="seo-faq">${meta.faq
-        .map(
-          (item) => `
+      )
+      .replace(
+        /<h1 id="seo-h1">[^<]*<\/h1>/,
+        `<h1 id="seo-h1">${title}</h1>`,
+      )
+      .replace(
+        /<p id="seo-about-text">[^<]*<\/p>/,
+        `<p id="seo-about-text">${meta.about}</p>`,
+      )
+      .replace(
+        /<div id="seo-faq">[\s\S]*?<\/div>\s*<\/div>\s*<\/details>/,
+        `<div id="seo-faq">${meta.faq
+          .map(
+            (item) => `
         <details class="seo-faq-item">
           <summary>${item.q}</summary>
           <p>${item.a}</p>
         </details>`,
-        )
-        .join("")}
+          )
+          .join("")}
       </div>
     </div>
   </details>`,
-    )
-    .replace(
-      /<script type="application\/ld\+json" id="faq-jsonld">[\s\S]*?<\/script>/,
-      `<script type="application/ld+json" id="faq-jsonld">
+      )
+      .replace(
+        /<script type="application\/ld\+json" id="faq-jsonld">[\s\S]*?<\/script>/,
+        `<script type="application\/ld\+json" id="faq-jsonld">
       {
         "@context": "https://schema.org",
         "@type": "FAQPage",
@@ -415,14 +470,39 @@ async function serveCompilerPage(res, lang) {
         ]
       }
     </script>`,
-    );
+      );
+  }
 
   res.setHeader("Content-Type", "text/html; charset=utf-8");
   res.setHeader(
     "Cache-Control",
     "no-store, no-cache, must-revalidate, proxy-revalidate",
   );
-  res.send(html);
+  return res.send(html);
+}
+
+async function serveCompilerPage(res, lang) {
+  const meta = LANG_META[lang];
+  if (!meta) return serveIndexHtml(res);
+  return serveIndexHtml(res, meta, lang);
+}
+
+async function serveLandingPage(res) {
+  let html;
+  try {
+    html = await readFile(LANDING_HTML_PATH, "utf8");
+  } catch {
+    return res.sendFile(LANDING_HTML_PATH);
+  }
+
+  html = injectGoogleScripts(html);
+
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  res.setHeader(
+    "Cache-Control",
+    "no-store, no-cache, must-revalidate, proxy-revalidate",
+  );
+  return res.send(html);
 }
 
 const PORT = process.env.PORT || 6600;
@@ -515,7 +595,7 @@ app.use(
 /* ------------- Serve public/index.html for share/code routes ----------- */
 
 app.get("/", (_req, res) => {
-  return res.sendFile(path.join(__dirname, "public/landing.html"));
+  return serveLandingPage(res);
 });
 
 app.get("/sitemap.xml", (_req, res) => {
@@ -545,7 +625,7 @@ app.get("/robots.txt", (_req, res) => {
 });
 
 app.get(["/c/:id", "/share/:id"], (req, res) => {
-  return res.sendFile(path.join(__dirname, "public/index.html"));
+  return serveIndexHtml(res);
 });
 
 /* -------------------------------- Routes -------------------------------- */
