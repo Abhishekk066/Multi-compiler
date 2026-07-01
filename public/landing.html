@@ -5,13 +5,65 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>CompileAny — Code in Any Language, Instantly</title>
     <meta
+      name="description"
+      content="A blazing-fast online compiler supporting 18+ languages with AI code generation, SQL sandbox, and HTML preview."
+    />
+    <meta
+      name="keywords"
+      content="online compiler, online ide, run code online, C++ compiler, Java compiler, Python interpreter, JavaScript online, coding sandbox"
+    />
+    <meta name="author" content="Abhishek" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://compileany.com/" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://compileany.com/" />
+    <meta
       property="og:title"
       content="CompileAny — Online Compiler for 18+ Languages"
     />
     <meta
-      name="description"
+      property="og:description"
       content="A blazing-fast online compiler supporting 18+ languages with AI code generation, SQL sandbox, and HTML preview."
     />
+    <meta property="og:image" content="https://compileany.com/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="CompileAny — Online Compiler for 18+ Languages"
+    />
+    <meta
+      name="twitter:description"
+      content="A blazing-fast online compiler supporting 18+ languages with AI code generation, SQL sandbox, and HTML preview."
+    />
+    <meta name="twitter:image" content="https://compileany.com/og-image.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "CompileAny",
+        "url": "https://compileany.com/",
+        "description": "A blazing-fast online compiler supporting 18+ languages with AI code generation, SQL sandbox, and HTML preview."
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "CompileAny",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any (Web-based)",
+        "url": "https://compileany.com/",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "description": "A blazing-fast online compiler supporting 18+ languages including C++, Python, Java, JavaScript, Go, Rust, and SQL — with AI code generation and instant execution, no installation required."
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
@@ -1167,6 +1219,69 @@
         color: #2563eb;
       }
 
+      /* ═══════════════════════ COFFEE BUTTON ═══════════════════════ */
+      .coffee-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.08);
+        color: #c8c8d8;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition:
+          background 0.2s,
+          color 0.2s,
+          border-color 0.2s,
+          transform 0.15s;
+        flex-shrink: 0;
+      }
+      .coffee-btn:hover {
+        background: rgba(255, 189, 89, 0.25);
+        border-color: rgba(255, 189, 89, 0.5);
+        color: #ffbd59;
+      }
+      .coffee-btn:active {
+        transform: scale(0.88);
+      }
+      .day .coffee-btn {
+        border-color: rgba(0, 0, 0, 0.15);
+        background: rgba(0, 0, 0, 0.06);
+        color: #374151;
+      }
+      .day .coffee-btn:hover {
+        background: rgba(255, 189, 89, 0.18);
+        border-color: rgba(255, 189, 89, 0.6);
+        color: #b45309;
+      }
+
+      /* ═══════════════════════ AD SLOT ═══════════════════════ */
+      .ad-slot {
+        max-width: 970px;
+        margin: 0 auto 1.5rem;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        background: var(--card);
+        text-align: center;
+        min-height: 90px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+      }
+      .ad-label {
+        font-size: 0.65rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
       /* ═══════════════════════ RESPONSIVE ═══════════════════════ */
       @media (max-width: 700px) {
         nav { padding: 0 1rem; }
@@ -1239,7 +1354,17 @@
         >
           <i class="fas fa-moon" id="theme-icon"></i>
         </button>
-        <a class="btn-nav" href="/cpp-programming">
+        <a
+          class="coffee-btn"
+          href="https://www.buymeacoffee.com/YOUR_BMC_USERNAME"
+          target="_blank"
+          rel="noopener"
+          title="Support this project"
+          aria-label="Support this project on Buy Me a Coffee"
+        >
+          <i class="fas fa-mug-hot"></i>
+        </a>
+        <a class="btn-nav" href="/cpp-online-compiler">
           <i class="fas fa-play"></i> Start Coding
         </a>
       </div>
@@ -1262,7 +1387,7 @@
       </p>
 
       <div class="hero-btns">
-        <a class="btn-primary" href="/cpp-programming">
+        <a class="btn-primary" href="/cpp-online-compiler">
           <i class="fas fa-play"></i> Open Compiler
         </a>
         <a class="btn-ghost" href="#languages">
@@ -1380,10 +1505,16 @@
       </div>
     </div>
 
+    <!-- ── AD SLOT ── -->
+    <div class="ad-slot reveal">
+      <span class="ad-label">Advertisement</span>
+      <div data-ea-publisher="YOUR_EA_PUBLISHER_ID" data-ea-type="image"></div>
+    </div>
+
     <!-- ── LANGUAGES ── -->
     <section class="section" id="languages">
       <div class="eyebrow reveal">Languages</div>
-      <div class="section-h reveal reveal-d1">Every Language You Need</div>
+      <h2 class="section-h reveal reveal-d1">Every Language You Need</h2>
       <p class="section-p reveal reveal-d2">
         From systems programming to web dev, data science to scripting — run
         anything without installing a thing.
@@ -1392,7 +1523,7 @@
       <div class="lang-grid">
         <a
           class="lang-card reveal"
-          href="/cpp-programming"
+          href="/cpp-online-compiler"
           style="--lc: #00599c"
         >
           <img
@@ -1403,7 +1534,7 @@
           />
           <span class="lang-label">C++</span>
         </a>
-        <a class="lang-card reveal" href="/c-programming" style="--lc: #a8b9cc">
+        <a class="lang-card reveal" href="/c-online-compiler" style="--lc: #a8b9cc">
           <img
             class="lang-icon"
             src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg"
@@ -1414,7 +1545,7 @@
         </a>
         <a
           class="lang-card reveal"
-          href="/java-programming"
+          href="/java-online-compiler"
           style="--lc: #f89820"
         >
           <img
@@ -1427,7 +1558,7 @@
         </a>
         <a
           class="lang-card reveal"
-          href="/python-programming"
+          href="/python-online-compiler"
           style="--lc: #3776ab"
         >
           <img
@@ -1440,7 +1571,7 @@
         </a>
         <a
           class="lang-card reveal"
-          href="/javascript-programming"
+          href="/javascript-online-compiler"
           style="--lc: #f7df1e"
         >
           <img
@@ -1453,7 +1584,7 @@
         </a>
         <a
           class="lang-card reveal"
-          href="/typescript-programming"
+          href="/typescript-online-compiler"
           style="--lc: #3178c6"
         >
           <img
@@ -1466,7 +1597,7 @@
         </a>
         <a
           class="lang-card reveal"
-          href="/go-programming"
+          href="/go-online-compiler"
           style="--lc: #00acd7"
         >
           <img
@@ -1479,7 +1610,7 @@
         </a>
         <a
           class="lang-card reveal"
-          href="/rust-programming"
+          href="/rust-online-compiler"
           style="--lc: #ce422b"
         >
           <img
@@ -1492,7 +1623,7 @@
         </a>
         <a
           class="lang-card reveal"
-          href="/kotlin-programming"
+          href="/kotlin-online-compiler"
           style="--lc: #7f52ff"
         >
           <img
@@ -1505,7 +1636,7 @@
         </a>
         <a
           class="lang-card reveal"
-          href="/ruby-programming"
+          href="/ruby-online-compiler"
           style="--lc: #cc342d"
         >
           <img
@@ -1518,7 +1649,7 @@
         </a>
         <a
           class="lang-card reveal"
-          href="/php-programming"
+          href="/php-online-compiler"
           style="--lc: #777bb4"
         >
           <img
@@ -1531,7 +1662,7 @@
         </a>
         <a
           class="lang-card reveal"
-          href="/bash-programming"
+          href="/bash-online-compiler"
           style="--lc: #4eaa25"
         >
           <img
@@ -1544,7 +1675,7 @@
         </a>
         <a
           class="lang-card reveal"
-          href="/csharp-programming"
+          href="/csharp-online-compiler"
           style="--lc: #239120"
         >
           <img
@@ -1557,7 +1688,7 @@
         </a>
         <a
           class="lang-card reveal"
-          href="/perl-programming"
+          href="/perl-online-compiler"
           style="--lc: #39457e"
         >
           <img
@@ -1570,7 +1701,7 @@
         </a>
         <a
           class="lang-card reveal"
-          href="/lua-programming"
+          href="/lua-online-compiler"
           style="--lc: #2c2d72"
         >
           <img
@@ -1581,7 +1712,7 @@
           />
           <span class="lang-label">Lua</span>
         </a>
-        <a class="lang-card reveal" href="/r-programming" style="--lc: #276dc3">
+        <a class="lang-card reveal" href="/r-online-compiler" style="--lc: #276dc3">
           <img
             class="lang-icon"
             src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/r/r-original.svg"
@@ -1601,7 +1732,7 @@
         </a>
         <a
           class="lang-card reveal"
-          href="/sql-programming"
+          href="/sql-online-compiler"
           style="--lc: #00758f"
         >
           <img
@@ -1618,9 +1749,9 @@
     <!-- ── FEATURES ── -->
     <section class="section" id="features">
       <div class="eyebrow reveal">Features</div>
-      <div class="section-h reveal reveal-d1">
+      <h2 class="section-h reveal reveal-d1">
         A Complete Coding Environment
-      </div>
+      </h2>
       <p class="section-p reveal reveal-d2">
         Everything you need — nothing you don't.
       </p>
@@ -1631,7 +1762,7 @@
           style="--fi-bg: rgba(37, 99, 235, 0.1); --fi-col: #3b82f6"
         >
           <div class="feat-icon"><i class="fas fa-terminal"></i></div>
-          <div class="feat-title">Real-Time Terminal</div>
+          <h3 class="feat-title">Real-Time Terminal</h3>
           <div class="feat-desc">
             Full stdin/stdout support. Your code runs in an isolated container
             and outputs stream live to a real xterm.js terminal.
@@ -1644,7 +1775,7 @@
           <div class="feat-icon">
             <i class="fas fa-wand-magic-sparkles"></i>
           </div>
-          <div class="feat-title">AI Code Generation</div>
+          <h3 class="feat-title">AI Code Generation</h3>
           <div class="feat-desc">
             Describe your program in plain English. AI writes production-ready
             code for any of the 18 supported languages in seconds.
@@ -1655,7 +1786,7 @@
           style="--fi-bg: rgba(6, 182, 212, 0.1); --fi-col: #06b6d4"
         >
           <div class="feat-icon"><i class="fas fa-database"></i></div>
-          <div class="feat-title">SQL Sandbox</div>
+          <h3 class="feat-title">SQL Sandbox</h3>
           <div class="feat-desc">
             Write and execute MySQL queries against a live database. Results
             render as a clean, styled table — not raw text.
@@ -1666,7 +1797,7 @@
           style="--fi-bg: rgba(249, 115, 22, 0.1); --fi-col: #f97316"
         >
           <div class="feat-icon"><i class="fas fa-globe"></i></div>
-          <div class="feat-title">HTML Live Preview</div>
+          <h3 class="feat-title">HTML Live Preview</h3>
           <div class="feat-desc">
             Write HTML, CSS, and JS and see a real preview instantly rendered in
             a sandboxed iframe — no browser extension needed.
@@ -1677,7 +1808,7 @@
           style="--fi-bg: rgba(16, 185, 129, 0.1); --fi-col: #10b981"
         >
           <div class="feat-icon"><i class="fas fa-share-nodes"></i></div>
-          <div class="feat-title">Share & Collaborate</div>
+          <h3 class="feat-title">Share & Collaborate</h3>
           <div class="feat-desc">
             Generate a permanent short link or QR code to share your code with
             anyone, anywhere. Zero sign-up required.
@@ -1688,7 +1819,7 @@
           style="--fi-bg: rgba(239, 68, 68, 0.1); --fi-col: #ef4444"
         >
           <div class="feat-icon"><i class="fas fa-bug"></i></div>
-          <div class="feat-title">AI Error Fixer</div>
+          <h3 class="feat-title">AI Error Fixer</h3>
           <div class="feat-desc">
             When compilation fails, one click sends your code and the error to
             AI. It rewrites the fix and loads it — ready to run again.
@@ -1700,7 +1831,7 @@
     <!-- ── MINI CODE SHOWCASE ── -->
     <div class="showcase">
       <div class="eyebrow reveal">Polyglot</div>
-      <div class="section-h reveal reveal-d1">Same Problem, Any Language</div>
+      <h2 class="section-h reveal reveal-d1">Same Problem, Any Language</h2>
       <p class="section-p reveal reveal-d2">
         Switch between languages instantly — your code session is always ready.
       </p>
@@ -1932,12 +2063,12 @@
           >
             <a
               class="btn-primary"
-              href="/cpp-programming"
+              href="/cpp-online-compiler"
               style="font-size: 1.05rem; padding: 15px 36px"
             >
               <i class="fas fa-play"></i> Open the Compiler
             </a>
-            <a class="btn-ghost" href="/python-programming">
+            <a class="btn-ghost" href="/python-online-compiler">
               <i class="fab fa-python"></i> Try Python
             </a>
           </div>
@@ -1951,13 +2082,13 @@
         CompileAny &mdash; Professional Online IDE
       </p>
       <p>
-        <a href="/cpp-programming">C++</a> &middot;
-        <a href="/python-programming">Python</a> &middot;
-        <a href="/javascript-programming">JavaScript</a> &middot;
-        <a href="/java-programming">Java</a> &middot;
-        <a href="/go-programming">Go</a> &middot;
-        <a href="/rust-programming">Rust</a> &middot;
-        <a href="/sql-programming">SQL</a>
+        <a href="/cpp-online-compiler">C++</a> &middot;
+        <a href="/python-online-compiler">Python</a> &middot;
+        <a href="/javascript-online-compiler">JavaScript</a> &middot;
+        <a href="/java-online-compiler">Java</a> &middot;
+        <a href="/go-online-compiler">Go</a> &middot;
+        <a href="/rust-online-compiler">Rust</a> &middot;
+        <a href="/sql-online-compiler">SQL</a>
         <span style="margin-left: 6px; color: var(--muted)">and 11 more</span>
       </p>
     </footer>
@@ -2085,5 +2216,6 @@
         });
       });
     </script>
+    <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
   </body>
 </html>

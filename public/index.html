@@ -16,7 +16,9 @@
       content="online compiler, cloud ide, programming, coding, C++, Java, Python, JavaScript, Ruby, Go, PHP, web development, software engineering"
     />
     <meta name="author" content="Abhishek" />
+    <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://compileany.com" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <link
       rel="alternate"
@@ -128,24 +130,45 @@
     <meta
       property="og:title"
       content="CompileAny — Online Compiler for Any Language"
+      id="og-title"
     />
     <meta
       property="og:description"
       content="Compile and run C++, Java, Python, JavaScript, and more instantly in your browser."
+      id="og-description"
     />
-    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:url" content="https://compileany.com" id="og-url" />
+    <meta property="og:image" content="https://compileany.com/og-image.png" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta
       name="twitter:title"
       content="CompileAny — Online Compiler for Any Language"
+      id="twitter-title"
     />
     <meta
       name="twitter:description"
       content="Compile and run C++, Java, Python, JavaScript, and more instantly in your browser."
+      id="twitter-description"
     />
-    <meta name="twitter:image" content="/og-image.png" />
+    <meta name="twitter:image" content="https://compileany.com/og-image.png" />
     <title>CompileAny — Online Compiler for Any Language</title>
+    <script type="application/ld+json" id="ld-json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "CompileAny — Online Compiler for Any Language",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any (Web-based)",
+        "url": "https://compileany.com",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "description": "Compile and run C++, Java, Python, JavaScript, and more instantly in your browser."
+      }
+    </script>
     <link
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
@@ -241,9 +264,19 @@
           >
         </div>
       </a>
+      <a
+        class="coffee-btn"
+        style="margin-left: auto; margin-right: 8px"
+        href="https://www.buymeacoffee.com/YOUR_BMC_USERNAME"
+        target="_blank"
+        rel="noopener"
+        title="Support this project"
+        aria-label="Support this project on Buy Me a Coffee"
+      >
+        <i class="fas fa-mug-hot"></i>
+      </a>
       <button
         class="mode brand-theme-toggle"
-        style="margin-left: auto"
         title="Toggle Light/Dark Mode"
       >
         <i class="fa-solid fa-sun"></i>
@@ -483,6 +516,63 @@
         </div>
       </div>
     </div>
+
+    <details id="seo-about" class="seo-about">
+      <summary class="seo-about-trigger" title="About this compiler" aria-label="About this compiler">
+        <i class="fas fa-circle-info"></i>
+      </summary>
+      <div class="seo-about-panel">
+        <h1 id="seo-h1">C++ Online Compiler — CompileAny</h1>
+        <p id="seo-about-text">C++ is a compiled, high-performance language widely used in competitive programming, game engines, and systems software. CompileAny compiles your code with g++ and streams the output to a live terminal, so you can test algorithms and DSA problems without setting up a local toolchain.</p>
+        <h2>Frequently Asked Questions</h2>
+        <div id="seo-faq">
+          <details class="seo-faq-item">
+            <summary>Is the C++ online compiler free to use?</summary>
+            <p>Yes. CompileAny's C++ compiler is completely free, with no signup, subscription, or installation required.</p>
+          </details>
+          <details class="seo-faq-item">
+            <summary>Which C++ compiler does CompileAny use?</summary>
+            <p>CompileAny compiles C++ using g++ inside an isolated Linux container, giving you standard GCC behavior — the same compiler used by most competitive programming judges.</p>
+          </details>
+          <details class="seo-faq-item">
+            <summary>Does it support user input (stdin)?</summary>
+            <p>Yes — CompileAny provides a live xterm.js terminal with full stdin/stdout support, so C++ programs that read user input via cin work exactly as they would locally.</p>
+          </details>
+        </div>
+      </div>
+    </details>
+    <script type="application/ld+json" id="faq-jsonld">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is the C++ online compiler free to use?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. CompileAny's C++ compiler is completely free, with no signup, subscription, or installation required."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Which C++ compiler does CompileAny use?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "CompileAny compiles C++ using g++ inside an isolated Linux container, giving you standard GCC behavior — the same compiler used by most competitive programming judges."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does it support user input (stdin)?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes — CompileAny provides a live xterm.js terminal with full stdin/stdout support, so C++ programs that read user input via cin work exactly as they would locally."
+            }
+          }
+        ]
+      }
+    </script>
     <script src="/script.min.js"></script>
   </body>
 </html>
