@@ -305,63 +305,11 @@ const LANG_META = {
 };
 
 const INDEX_HTML_PATH = path.join(__dirname, "public/index.html");
-const LANDING_HTML_PATH = path.join(__dirname, "public/landing.html");
 
-function injectGoogleScripts(html) {
-  const gaId = process.env.GA_TRACKING_ID;
-  const adsenseId = process.env.ADSENSE_CLIENT_ID;
-  const gtmId = process.env.GTM_TRACKING_ID;
+async function serveCompilerPage(res, lang) {
+  const meta = LANG_META[lang];
+  if (!meta) return res.sendFile(INDEX_HTML_PATH);
 
-  let headScripts = "";
-  let bodyScripts = "";
-
-  if (gaId) {
-    headScripts += `
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=${gaId}"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', '${gaId}');
-  </script>`;
-  }
-
-  if (adsenseId) {
-    const formattedAdsenseId = adsenseId.startsWith("pub-") ? `ca-${adsenseId}` : adsenseId;
-    headScripts += `
-  <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${formattedAdsenseId}" crossorigin="anonymous"></script>`;
-  }
-
-  if (gtmId) {
-    headScripts += `
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','${gtmId}');</script>
-  <!-- End Google Tag Manager -->`;
-
-    bodyScripts += `
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${gtmId}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->`;
-  }
-
-  if (headScripts) {
-    html = html.replace("</head>", `${headScripts}\n</head>`);
-  }
-
-  if (bodyScripts) {
-    html = html.replace(/<body[^>]*>/, (match) => `${match}\n${bodyScripts}`);
-  }
-
-  return html;
-}
-
-async function serveIndexHtml(res, meta = null, lang = null) {
   let html;
   try {
     html = await readFile(INDEX_HTML_PATH, "utf8");
@@ -369,46 +317,43 @@ async function serveIndexHtml(res, meta = null, lang = null) {
     return res.sendFile(INDEX_HTML_PATH);
   }
 
-  html = injectGoogleScripts(html);
+  const title = `${meta.label} Online Compiler: Compile & Run ${meta.label} Code — CompileAny`;
+  const slug = lang === "html" ? "html" : `${lang}-online-compiler`;
+  const canonical = `https://compileany.com/${slug}`;
 
-  if (meta && lang) {
-    const title = `${meta.label} Online Compiler: Compile & Run ${meta.label} Code — CompileAny`;
-    const slug = lang === "html" ? "html" : `${lang}-online-compiler`;
-    const canonical = `https://compileany.com/${slug}`;
-
-    html = html
-      .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`)
-      .replace(
-        /<meta\s+name="description"[^>]*>/,
-        `<meta name="description" content="${meta.desc}" />`,
-      )
-      .replace(
-        /<link rel="canonical"[^>]*>/,
-        `<link rel="canonical" href="${canonical}" />`,
-      )
-      .replace(
-        /<meta\s+property="og:title"[^>]*id="og-title"[^>]*\/>/,
-        `<meta property="og:title" content="${title}" id="og-title" />`,
-      )
-      .replace(
-        /<meta\s+property="og:description"[^>]*id="og-description"[^>]*\/>/,
-        `<meta property="og:description" content="${meta.desc}" id="og-description" />`,
-      )
-      .replace(
-        /<meta\s+property="og:url"[^>]*id="og-url"[^>]*\/>/,
-        `<meta property="og:url" content="${canonical}" id="og-url" />`,
-      )
-      .replace(
-        /<meta\s+name="twitter:title"[^>]*id="twitter-title"[^>]*\/>/,
-        `<meta name="twitter:title" content="${title}" id="twitter-title" />`,
-      )
-      .replace(
-        /<meta\s+name="twitter:description"[^>]*id="twitter-description"[^>]*\/>/,
-        `<meta name="twitter:description" content="${meta.desc}" id="twitter-description" />`,
-      )
-      .replace(
-        /<script type="application\/ld\+json" id="ld-json">[\s\S]*?<\/script>/,
-        `<script type="application\/ld\+json" id="ld-json">
+  html = html
+    .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`)
+    .replace(
+      /<meta\s+name="description"[^>]*>/,
+      `<meta name="description" content="${meta.desc}" />`,
+    )
+    .replace(
+      /<link rel="canonical"[^>]*>/,
+      `<link rel="canonical" href="${canonical}" />`,
+    )
+    .replace(
+      /<meta\s+property="og:title"[^>]*id="og-title"[^>]*\/>/,
+      `<meta property="og:title" content="${title}" id="og-title" />`,
+    )
+    .replace(
+      /<meta\s+property="og:description"[^>]*id="og-description"[^>]*\/>/,
+      `<meta property="og:description" content="${meta.desc}" id="og-description" />`,
+    )
+    .replace(
+      /<meta\s+property="og:url"[^>]*id="og-url"[^>]*\/>/,
+      `<meta property="og:url" content="${canonical}" id="og-url" />`,
+    )
+    .replace(
+      /<meta\s+name="twitter:title"[^>]*id="twitter-title"[^>]*\/>/,
+      `<meta name="twitter:title" content="${title}" id="twitter-title" />`,
+    )
+    .replace(
+      /<meta\s+name="twitter:description"[^>]*id="twitter-description"[^>]*\/>/,
+      `<meta name="twitter:description" content="${meta.desc}" id="twitter-description" />`,
+    )
+    .replace(
+      /<script type="application\/ld\+json" id="ld-json">[\s\S]*?<\/script>/,
+      `<script type="application\/ld\+json" id="ld-json">
       {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
@@ -424,33 +369,30 @@ async function serveIndexHtml(res, meta = null, lang = null) {
         "description": "${meta.desc}"
       }
     </script>`,
-      )
-      .replace(
-        /<h1 id="seo-h1">[^<]*<\/h1>/,
-        `<h1 id="seo-h1">${title}</h1>`,
-      )
-      .replace(
-        /<p id="seo-about-text">[^<]*<\/p>/,
-        `<p id="seo-about-text">${meta.about}</p>`,
-      )
-      .replace(
-        /<div id="seo-faq">[\s\S]*?<\/div>\s*<\/div>\s*<\/details>/,
-        `<div id="seo-faq">${meta.faq
-          .map(
-            (item) => `
+    )
+    .replace(/<h1 id="seo-h1">[^<]*<\/h1>/, `<h1 id="seo-h1">${title}</h1>`)
+    .replace(
+      /<p id="seo-about-text">[^<]*<\/p>/,
+      `<p id="seo-about-text">${meta.about}</p>`,
+    )
+    .replace(
+      /<div id="seo-faq">[\s\S]*?<\/div>\s*<\/div>\s*<\/details>/,
+      `<div id="seo-faq">${meta.faq
+        .map(
+          (item) => `
         <details class="seo-faq-item">
           <summary>${item.q}</summary>
           <p>${item.a}</p>
         </details>`,
-          )
-          .join("")}
+        )
+        .join("")}
       </div>
     </div>
   </details>`,
-      )
-      .replace(
-        /<script type="application\/ld\+json" id="faq-jsonld">[\s\S]*?<\/script>/,
-        `<script type="application\/ld\+json" id="faq-jsonld">
+    )
+    .replace(
+      /<script type="application\/ld\+json" id="faq-jsonld">[\s\S]*?<\/script>/,
+      `<script type="application\/ld\+json" id="faq-jsonld">
       {
         "@context": "https://schema.org",
         "@type": "FAQPage",
@@ -470,39 +412,14 @@ async function serveIndexHtml(res, meta = null, lang = null) {
         ]
       }
     </script>`,
-      );
-  }
+    );
 
   res.setHeader("Content-Type", "text/html; charset=utf-8");
   res.setHeader(
     "Cache-Control",
     "no-store, no-cache, must-revalidate, proxy-revalidate",
   );
-  return res.send(html);
-}
-
-async function serveCompilerPage(res, lang) {
-  const meta = LANG_META[lang];
-  if (!meta) return serveIndexHtml(res);
-  return serveIndexHtml(res, meta, lang);
-}
-
-async function serveLandingPage(res) {
-  let html;
-  try {
-    html = await readFile(LANDING_HTML_PATH, "utf8");
-  } catch {
-    return res.sendFile(LANDING_HTML_PATH);
-  }
-
-  html = injectGoogleScripts(html);
-
-  res.setHeader("Content-Type", "text/html; charset=utf-8");
-  res.setHeader(
-    "Cache-Control",
-    "no-store, no-cache, must-revalidate, proxy-revalidate",
-  );
-  return res.send(html);
+  res.send(html);
 }
 
 const PORT = process.env.PORT || 6600;
@@ -595,7 +512,7 @@ app.use(
 /* ------------- Serve public/index.html for share/code routes ----------- */
 
 app.get("/", (_req, res) => {
-  return serveLandingPage(res);
+  return res.sendFile(path.join(__dirname, "public/landing.html"));
 });
 
 app.get("/sitemap.xml", (_req, res) => {
@@ -625,7 +542,7 @@ app.get("/robots.txt", (_req, res) => {
 });
 
 app.get(["/c/:id", "/share/:id"], (req, res) => {
-  return serveIndexHtml(res);
+  return res.sendFile(INDEX_HTML_PATH);
 });
 
 /* -------------------------------- Routes -------------------------------- */

@@ -1,6 +1,42 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-C6K5PXKFRM"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-C6K5PXKFRM");
+    </script>
+
+    <!-- Google AdSense -->
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8548942314917893"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-5BN8FK3Q");
+    </script>
+    <!-- End Google Tag Manager -->
+
     <meta charset="UTF-8" />
     <meta
       name="viewport"
@@ -152,7 +188,9 @@
       id="twitter-description"
     />
     <meta name="twitter:image" content="https://compileany.com/og-image.png" />
-    <title>Online Compiler: Free Multi-Language Code Editor & IDE — CompileAny</title>
+    <title>
+      Online Compiler: Free Multi-Language Code Editor & IDE — CompileAny
+    </title>
     <script type="application/ld+json" id="ld-json">
       {
         "@context": "https://schema.org",
@@ -215,6 +253,17 @@
   </head>
 
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-5BN8FK3Q"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
     <div class="loader-parent">
       <div class="loader-container">
         <div class="loader"></div>
@@ -508,25 +557,46 @@
     </div>
 
     <details id="seo-about" class="seo-about">
-      <summary class="seo-about-trigger" title="About this compiler" aria-label="About this compiler">
+      <summary
+        class="seo-about-trigger"
+        title="About this compiler"
+        aria-label="About this compiler"
+      >
         <i class="fas fa-circle-info"></i>
       </summary>
       <div class="seo-about-panel">
         <h1 id="seo-h1">C++ Online Compiler — CompileAny</h1>
-        <p id="seo-about-text">C++ is a compiled, high-performance language widely used in competitive programming, game engines, and systems software. CompileAny compiles your code with g++ and streams the output to a live terminal, so you can test algorithms and DSA problems without setting up a local toolchain.</p>
+        <p id="seo-about-text">
+          C++ is a compiled, high-performance language widely used in
+          competitive programming, game engines, and systems software.
+          CompileAny compiles your code with g++ and streams the output to a
+          live terminal, so you can test algorithms and DSA problems without
+          setting up a local toolchain.
+        </p>
         <h2>Frequently Asked Questions</h2>
         <div id="seo-faq">
           <details class="seo-faq-item">
             <summary>Is the C++ online compiler free to use?</summary>
-            <p>Yes. CompileAny's C++ compiler is completely free, with no signup, subscription, or installation required.</p>
+            <p>
+              Yes. CompileAny's C++ compiler is completely free, with no signup,
+              subscription, or installation required.
+            </p>
           </details>
           <details class="seo-faq-item">
             <summary>Which C++ compiler does CompileAny use?</summary>
-            <p>CompileAny compiles C++ using g++ inside an isolated Linux container, giving you standard GCC behavior — the same compiler used by most competitive programming judges.</p>
+            <p>
+              CompileAny compiles C++ using g++ inside an isolated Linux
+              container, giving you standard GCC behavior — the same compiler
+              used by most competitive programming judges.
+            </p>
           </details>
           <details class="seo-faq-item">
             <summary>Does it support user input (stdin)?</summary>
-            <p>Yes — CompileAny provides a live xterm.js terminal with full stdin/stdout support, so C++ programs that read user input via cin work exactly as they would locally.</p>
+            <p>
+              Yes — CompileAny provides a live xterm.js terminal with full
+              stdin/stdout support, so C++ programs that read user input via cin
+              work exactly as they would locally.
+            </p>
           </details>
         </div>
       </div>

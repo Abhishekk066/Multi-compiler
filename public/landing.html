@@ -1,9 +1,47 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-C6K5PXKFRM"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-C6K5PXKFRM");
+    </script>
+
+    <!-- Google AdSense -->
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8548942314917893"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-5BN8FK3Q");
+    </script>
+    <!-- End Google Tag Manager -->
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Online Compiler: Free Multi-Language Code Editor & IDE — CompileAny</title>
+    <title>
+      Online Compiler: Free Multi-Language Code Editor & IDE — CompileAny
+    </title>
     <meta
       name="description"
       content="CompileAny is a free, fast online compiler and IDE to write, compile, and run code online in 20+ programming languages including C++, Python, Java, Go, Rust, and SQL."
@@ -1284,49 +1322,139 @@
 
       /* ═══════════════════════ RESPONSIVE ═══════════════════════ */
       @media (max-width: 700px) {
-        nav { padding: 0 1rem; }
-        .nav-link { display: none; }
-        .t-tabs { display: none; }
+        nav {
+          padding: 0 1rem;
+        }
+        .nav-link {
+          display: none;
+        }
+        .t-tabs {
+          display: none;
+        }
 
-        .hero { padding: 6rem 1rem 3rem; }
-        h1 { letter-spacing: -1.5px; margin-bottom: 1rem; }
-        .hero-sub { font-size: 0.95rem; margin-bottom: 2rem; }
-        .hero-btns { gap: 10px; margin-bottom: 2.5rem; }
-        .btn-primary, .btn-ghost { padding: 11px 22px; font-size: 0.9rem; }
+        .hero {
+          padding: 6rem 1rem 3rem;
+        }
+        h1 {
+          letter-spacing: -1.5px;
+          margin-bottom: 1rem;
+        }
+        .hero-sub {
+          font-size: 0.95rem;
+          margin-bottom: 2rem;
+        }
+        .hero-btns {
+          gap: 10px;
+          margin-bottom: 2.5rem;
+        }
+        .btn-primary,
+        .btn-ghost {
+          padding: 11px 22px;
+          font-size: 0.9rem;
+        }
 
-        .terminal-wrap { padding: 0 0.5rem; }
+        .terminal-wrap {
+          padding: 0 0.5rem;
+        }
 
-        .stats-row { margin: 3rem auto; }
-        .stat { border-right: none; border-bottom: 1px solid var(--border); }
-        .stat:last-child { border-bottom: none; }
+        .stats-row {
+          margin: 3rem auto;
+        }
+        .stat {
+          border-right: none;
+          border-bottom: 1px solid var(--border);
+        }
+        .stat:last-child {
+          border-bottom: none;
+        }
 
-        .section { padding: 3rem 1rem; }
-        .section-h { font-size: 1.7rem; }
-        .section-p { font-size: 0.95rem; }
+        .section {
+          padding: 3rem 1rem;
+        }
+        .section-h {
+          font-size: 1.7rem;
+        }
+        .section-p {
+          font-size: 0.95rem;
+        }
 
-        .lang-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; margin-top: 2rem; }
-        .lang-card { padding: 1rem 0.5rem; }
-        .lang-icon { width: 30px; height: 30px; }
+        .lang-grid {
+          grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+          gap: 8px;
+          margin-top: 2rem;
+        }
+        .lang-card {
+          padding: 1rem 0.5rem;
+        }
+        .lang-icon {
+          width: 30px;
+          height: 30px;
+        }
 
-        .feat-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 2rem; }
-        .showcase-grid { grid-template-columns: 1fr; }
+        .feat-grid {
+          grid-template-columns: 1fr;
+          gap: 10px;
+          margin-top: 2rem;
+        }
+        .showcase-grid {
+          grid-template-columns: 1fr;
+        }
 
-        .cta-wrap { padding: 2rem 1rem 5rem; }
-        .cta-inner { padding: 2.5rem 1.5rem; border-radius: 18px; }
-        .cta-inner p { font-size: 0.95rem; margin-bottom: 1.5rem; }
+        .cta-wrap {
+          padding: 2rem 1rem 5rem;
+        }
+        .cta-inner {
+          padding: 2.5rem 1.5rem;
+          border-radius: 18px;
+        }
+        .cta-inner p {
+          font-size: 0.95rem;
+          margin-bottom: 1.5rem;
+        }
       }
 
       @media (max-width: 425px) {
-        .logo-mark { width: 30px; height: 30px; font-size: 12px; border-radius: 8px; }
-        .logo-name { font-size: 0.9rem; }
-        .logo { gap: 10px; }
-        .btn-primary, .btn-ghost { padding: 10px 18px; font-size: 0.85rem; width: 100%; justify-content: center; }
-        .hero-btns { flex-direction: column; align-items: center; }
-        .lang-grid { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); }
+        .logo-mark {
+          width: 30px;
+          height: 30px;
+          font-size: 12px;
+          border-radius: 8px;
+        }
+        .logo-name {
+          font-size: 0.9rem;
+        }
+        .logo {
+          gap: 10px;
+        }
+        .btn-primary,
+        .btn-ghost {
+          padding: 10px 18px;
+          font-size: 0.85rem;
+          width: 100%;
+          justify-content: center;
+        }
+        .hero-btns {
+          flex-direction: column;
+          align-items: center;
+        }
+        .lang-grid {
+          grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        }
       }
     </style>
   </head>
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-5BN8FK3Q"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
     <div class="bg-canvas">
       <div class="orb orb1"></div>
       <div class="orb orb2"></div>
@@ -1504,7 +1632,9 @@
     <!-- ── LANGUAGES ── -->
     <section class="section" id="languages">
       <div class="eyebrow reveal">Languages</div>
-      <h2 class="section-h reveal reveal-d1">Supported Languages on Our Online Compiler</h2>
+      <h2 class="section-h reveal reveal-d1">
+        Supported Languages on Our Online Compiler
+      </h2>
       <p class="section-p reveal reveal-d2">
         From systems programming to web dev, data science to scripting — run
         anything without installing a thing.
@@ -1869,7 +1999,9 @@
     <!-- ── MINI CODE SHOWCASE ── -->
     <div class="showcase">
       <div class="eyebrow reveal">Polyglot</div>
-      <h2 class="section-h reveal reveal-d1">Compare Online Compiler Outputs</h2>
+      <h2 class="section-h reveal reveal-d1">
+        Compare Online Compiler Outputs
+      </h2>
       <p class="section-p reveal reveal-d2">
         Switch between languages instantly — your code session is always ready.
       </p>
@@ -2254,6 +2386,9 @@
         });
       });
     </script>
-    <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
+    <script
+      async
+      src="https://media.ethicalads.io/media/client/ethicalads.min.js"
+    ></script>
   </body>
 </html>

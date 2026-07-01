@@ -10,8 +10,7 @@ function generateShortId(length = 8) {
     .slice(0, length);
 }
 
-const mainDomain =
-  process.env.MAIN_DOMAIN || "https://compileany.com";
+const mainDomain = process.env.MAIN_DOMAIN || "https://compileany.com";
 const requestedDomain =
   process.env.REQUESTED_DOMAIN || "https://fecpp.abhishekdev.cloud";
 
